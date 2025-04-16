@@ -1,4 +1,4 @@
 package com.javimutis.examplemvvm.model
 
-data class QuoteModel(val quote:String, val author:String)
-
+// Esta clase representa una cita. Contiene el texto y el autor.
+data class QuoteModel(val quote: String, val author: String)

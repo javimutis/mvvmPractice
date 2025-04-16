@@ -3,11 +3,13 @@ package com.javimutis.examplemvvm.model
 class QuoteProvider {
     companion object {
 
+        // Función que elige aleatoriamente una cita de la lista.
         fun random(): QuoteModel {
-            val position = (0..10).random()
-            return quote[position]
+            val position = (0..10).random() // Elige un número aleatorio entre 0 y 10.
+            return quote[position] // Retorna la cita en esa posición.
         }
 
+        // Lista de citas famosas o graciosas sobre programación.
         private val quote = listOf<QuoteModel>(
             QuoteModel(
                 quote = "It’s not a bug. It’s an undocumented feature!",
@@ -43,7 +45,7 @@ class QuoteProvider {
                 quote = "Software and cathedrals are much the same — first we build them, then we pray.",
                 author = "Anonymous"
             ),
-            QuoteModel(quote = "¿A que esperas?, suscríbete.", author = "AristiDevs")
+            QuoteModel(quote = "¿A qué esperas?, suscríbete.", author = "AristiDevs")
         )
     }
 }
