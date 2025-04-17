@@ -12,6 +12,10 @@ constraintlayout = "2.2.1"
 lifecycle = "2.6.2"
 fragment = "1.6.1"
 activity-ktx ="1.8.0"
+retrofit = "2.9.0"
+okhttp = "4.12.0"
+
+
 
 
 [libraries]
@@ -28,6 +32,13 @@ androidx-lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-r
 androidx-lifecycle-viewmodel = { group = "androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "lifecycle" }
 androidx-lifecycle-livedata = { group = "androidx.lifecycle", name = "lifecycle-livedata", version.ref = "lifecycle" }
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activity-ktx" }
+# Retrofit
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+
+
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
