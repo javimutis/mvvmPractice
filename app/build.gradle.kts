@@ -60,4 +60,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp.logging)
+
+    //Coroutines
+    implementation(libs.coroutines.core)
+    implementation(libs.coroutines.android)
 }

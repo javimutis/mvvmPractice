@@ -1,4 +1,4 @@
-package com.javimutis.examplemvvm.view
+package com.javimutis.examplemvvm.ui.view
 
 // Importamos todas las clases necesarias para que funcione nuestra app.
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat // Para manejar márgenes del siste
 import androidx.lifecycle.Observer // Observa los datos del ViewModel.
 import com.javimutis.examplemvvm.R // Referencia a los recursos (colores, strings, layouts, etc).
 import com.javimutis.examplemvvm.databinding.ActivityMainBinding // Permite acceder a las vistas sin usar findViewById.
-import com.javimutis.examplemvvm.viewmodel.QuoteViewModel // Importa el ViewModel que contiene la lógica de negocio.
+import com.javimutis.examplemvvm.ui.viewmodel.QuoteViewModel // Importa el ViewModel que contiene la lógica de negocio.
 
 class MainActivity : AppCompatActivity() {
 

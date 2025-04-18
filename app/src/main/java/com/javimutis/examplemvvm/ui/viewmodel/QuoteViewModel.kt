@@ -1,9 +1,9 @@
-package com.javimutis.examplemvvm.viewmodel
+package com.javimutis.examplemvvm.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData // Permite observar datos que cambian.
 import androidx.lifecycle.ViewModel
-import com.javimutis.examplemvvm.model.QuoteModel
-import com.javimutis.examplemvvm.model.QuoteProvider
+import com.javimutis.examplemvvm.data.model.QuoteModel
+import com.javimutis.examplemvvm.data.model.QuoteProvider
 
 class QuoteViewModel : ViewModel() {
 
