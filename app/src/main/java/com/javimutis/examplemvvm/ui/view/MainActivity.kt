@@ -7,6 +7,7 @@ import androidx.activity.viewModels // Sirve para obtener el ViewModel.
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat // Para trabajar con compatibilidad visual de las vistas.
 import androidx.core.view.WindowInsetsCompat // Para manejar márgenes del sistema (barra superior, inferior).
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer // Observa los datos del ViewModel.
 import com.javimutis.examplemvvm.R // Referencia a los recursos (colores, strings, layouts, etc).
 import com.javimutis.examplemvvm.databinding.ActivityMainBinding // Permite acceder a las vistas sin usar findViewById.
@@ -37,10 +38,15 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        quoteViewModel.onCreate()
+
         // Observamos los cambios en la cita actual. Si cambia, actualizamos el texto en pantalla.
         quoteViewModel.quoteModel.observe(this, Observer { currentQuote ->
             binding.tvQuote.text = currentQuote.quote
             binding.tvAuthor.text = currentQuote.author
+        })
+        quoteViewModel.isLoading.observe(this, Observer {
+            binding.progress.isVisible = it
         })
 
         // Cuando el usuario hace clic en el contenedor, se genera una nueva cita aleatoria.
