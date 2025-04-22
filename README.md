@@ -1,36 +1,85 @@
-# 📱 App de Citas de Programadores- Ejemplo MVVM en Android
+# 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-Este proyecto es una aplicación muy simple que muestra citas famosas relacionadas con la programación. Está construida con el patrón de arquitectura **MVVM** (Model - View - ViewModel) y utiliza tecnologías modernas como **ViewBinding** y **LiveData**.
+Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel) y buenas prácticas de desarrollo Android.
 
 ## 👩‍🏫 ¿Qué hace esta app?
 
-- Muestra una cita aleatoria al abrir la app.
-- Al hacer clic en cualquier parte de la pantalla, se muestra una nueva cita.
+- Al abrir la app, muestra una cita inspiradora aleatoria sobre programación.
+- Al hacer clic en cualquier parte de la pantalla, se muestra una nueva cita aleatoria.
+- Las citas provienen de una base de datos en línea (Firebase Realtime Database).
 
-## 🧱 Estructura del Proyecto
+## 🧠 Arquitectura MVVM + Clean (simplificada)
 
-### Modelo (Model)
-- `QuoteModel.kt`: Representa una cita (texto y autor).
-- `QuoteProvider.kt`: Contiene una lista de citas y una función para obtener una aleatoriamente.
+La app está dividida en capas para mantener el código ordenado, entendible y escalable:
 
-### Vista (View)
-- `MainActivity.kt`: Muestra la interfaz y observa los cambios en las citas para actualizarlas en pantalla.
+### 🧱 Modelo (Model)
+Representa los datos y su origen (API en este caso).
 
-### ViewModel
-- `QuoteViewModel.kt`: Contiene la lógica para seleccionar una nueva cita y notificar a la vista cuando cambia.
+- `QuoteModel.kt`: Modelo de datos que representa una cita (texto + autor).
+- `QuoteProvider.kt`: Contenedor temporal de citas (almacena la lista desde la API).
+
+### 🌐 Red (Network)
+Encargada de comunicarse con la API.
+
+- `QuoteApiClient.kt`: Define el endpoint para obtener todas las citas desde Firebase usando Retrofit.
+- `QuoteService.kt`: Ejecuta la llamada a la API utilizando `RetrofitHelper`.
+
+### 📦 Repositorio (Repository)
+Intermediario entre los datos (API) y la lógica de negocio (Use Cases).
+
+- `QuoteRepository.kt`: Obtiene las citas desde el servicio de red y las guarda en el `QuoteProvider`.
+
+### 🎯 Casos de Uso (UseCase)
+Contienen la lógica del negocio de la app (una capa opcional pero buena práctica).
+
+- `GetQuoteUseCase.kt`: Obtiene todas las citas desde el repositorio.
+- `GetRandomQuoteUseCase.kt`: Elige una cita aleatoria desde la lista cargada.
+
+### 👁️ Vista (View)
+Se encarga de mostrar los datos al usuario y responder a sus interacciones.
+
+- `MainActivity.kt`: Muestra la interfaz de usuario, observa los cambios del ViewModel y responde al clic del usuario para mostrar una nueva cita.
+
+### 🧠 ViewModel
+Conecta la vista con los datos y la lógica de negocio.
+
+- `QuoteViewModel.kt`: Se comunica con los casos de uso, mantiene el estado de la cita actual y la muestra a la vista usando `LiveData`.
+
+## 📡 Backend utilizado
+
+- **Firebase Realtime Database**: Se utiliza como backend para guardar y obtener las citas en formato JSON.
+
+Ejemplo de URL de la base de datos: https://drawsomething-59328-default-rtdb.europe-west1.firebasedatabase.app/.json
+
 
 ## 🧰 Tecnologías utilizadas
 
 - **Kotlin**
 - **MVVM**
-- **ViewModel**
-- **LiveData**
+- **ViewModel + LiveData**
 - **ViewBinding**
+- **Coroutines** para llamadas asíncronas
+- **Retrofit** para conectarse a la API
+- **Firebase Realtime Database** como fuente de datos
 
-## 💡 ¿Para qué sirve este proyecto?
+## 📖 ¿Para qué sirve este proyecto?
 
-Este proyecto está pensado como una base o ejemplo para:
-- Aprender a usar MVVM en Android.
-- Entender cómo funciona `LiveData` y `ViewModel`.
-- Practicar el uso de `ViewBinding`.
+Este proyecto es un excelente punto de partida para:
+
+- Aprender a implementar el patrón MVVM en Android.
+- Comprender el flujo completo de datos desde una API hasta la interfaz.
+- Practicar con Retrofit y Firebase.
+- Ver cómo se estructuran apps reales usando capas limpias (domain, data, UI).
+- Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y `Coroutines`.
+
+## 🛠️ ¿Cómo correr este proyecto?
+
+1. Clona el repositorio.
+2. Abre el proyecto en Android Studio.
+3. Asegúrate de tener conexión a internet (las citas se cargan desde Firebase).
+4. Ejecuta la app en un emulador o dispositivo físico.
+
+---
+
+✨ Este proyecto está pensado como material de estudio y base para futuros desarrollos. Puedes expandirlo agregando una base de datos local, navegación entre pantallas, guardar citas favoritas, entre otros.
 

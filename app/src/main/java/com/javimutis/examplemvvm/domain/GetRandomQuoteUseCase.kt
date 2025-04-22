@@ -1,15 +1,16 @@
 package com.javimutis.examplemvvm.domain
 
-import com.javimutis.examplemvvm.data.model.QuoteModel
 import com.javimutis.examplemvvm.data.model.QuoteProvider
+import com.javimutis.examplemvvm.data.model.QuoteModel
 
+// Caso de uso: Obtener una cita aleatoria de la lista ya descargada.
 class GetRandomQuoteUseCase {
-    operator fun invoke(): QuoteModel?
-    {
+
+    // Devuelve una cita aleatoria desde el QuoteProvider.
+    operator fun invoke(): QuoteModel? {
         val quotes = QuoteProvider.quotes
-        if (!quotes.isNullOrEmpty()) {
-            val randomNumber = (quotes.indices).random()
-            return quotes[randomNumber]
+        if (quotes.isNotEmpty()) {
+            return quotes.random()
         }
         return null
     }
