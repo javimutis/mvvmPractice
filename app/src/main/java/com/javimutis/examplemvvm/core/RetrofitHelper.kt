@@ -15,5 +15,6 @@ object RetrofitHelper {
             // Indica que usaremos GSON para convertir datos JSON a objetos Kotlin.
             .addConverterFactory(GsonConverterFactory.create())
             .build() // Crea y devuelve la instancia final de Retrofit.
+
     }
 }

@@ -6,16 +6,20 @@ import androidx.lifecycle.viewModelScope
 import com.javimutis.examplemvvm.data.model.QuoteModel
 import com.javimutis.examplemvvm.domain.GetQuoteUseCase
 import com.javimutis.examplemvvm.domain.GetRandomQuoteUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@HiltViewModel
 // El ViewModel se encarga de manejar los datos que la vista necesita.
-class QuoteViewModel : ViewModel() {
+class QuoteViewModel @Inject constructor(
+    private val getQuoteUseCase: GetQuoteUseCase, // Caso de uso para obtener todas las citas.
+    private val getRandomQuoteUseCase: GetRandomQuoteUseCase // Caso de uso para obtener una cita aleatoria.
+) : ViewModel() {
 
     val quoteModel = MutableLiveData<QuoteModel>() // Cita actual que se mostrará en pantalla.
     val isLoading = MutableLiveData<Boolean>() // Estado de carga: true si está cargando.
 
-    var getQuoteUseCase = GetQuoteUseCase() // Caso de uso para obtener todas las citas.
-    var getRandomQuoteUseCase = GetRandomQuoteUseCase() // Caso de uso para obtener una cita aleatoria.
 
     // Esta función se llama cuando se crea la vista. Carga la primera cita.
     fun onCreate() {

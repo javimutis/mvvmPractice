@@ -1,6 +1,5 @@
 package com.javimutis.examplemvvm.ui.view
 
-// Importamos clases necesarias.
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -12,7 +11,9 @@ import androidx.lifecycle.Observer
 import com.javimutis.examplemvvm.R
 import com.javimutis.examplemvvm.databinding.ActivityMainBinding
 import com.javimutis.examplemvvm.ui.viewmodel.QuoteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 // Pantalla principal de la app.
 class MainActivity : AppCompatActivity() {
 

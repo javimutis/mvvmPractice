@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kapt)
+
 }
 
 android {
@@ -64,4 +67,11 @@ dependencies {
     //Coroutines
     implementation(libs.coroutines.core)
     implementation(libs.coroutines.android)
+
+    //Dagger Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+}
+kapt {
+    correctErrorTypes = true
 }
