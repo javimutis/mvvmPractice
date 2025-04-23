@@ -1,6 +1,6 @@
 # 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel) y buenas prácticas de desarrollo Android.
+Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**.
 
 ## 👩‍🏫 ¿Qué hace esta app?
 
@@ -45,17 +45,29 @@ Conecta la vista con los datos y la lógica de negocio.
 
 - `QuoteViewModel.kt`: Se comunica con los casos de uso, mantiene el estado de la cita actual y la muestra a la vista usando `LiveData`.
 
+## 🧩 Inyección de dependencias con Dagger Hilt
+
+La app utiliza **Dagger Hilt** para gestionar la inyección de dependencias de forma eficiente y desacoplada. Esto permite una mejor escalabilidad y testeo del código.
+
+- `@HiltAndroidApp`: Aplicación base configurada para usar Hilt.
+- `@Inject`: Se usa para proveer dependencias en clases como `QuoteViewModel`, `QuoteRepository`, y `QuoteService`.
+- `@Module` y `@InstallIn`: Se definen módulos para proveer Retrofit, el cliente de API y otras dependencias.
+
+Gracias a Hilt, las dependencias se inyectan automáticamente en el ViewModel y otras capas del proyecto, reduciendo el boilerplate y facilitando el mantenimiento.
+
 ## 📡 Backend utilizado
 
 - **Firebase Realtime Database**: Se utiliza como backend para guardar y obtener las citas en formato JSON.
 
-Ejemplo de URL de la base de datos: https://drawsomething-59328-default-rtdb.europe-west1.firebasedatabase.app/.json
-
+Ejemplo de URL de la base de datos:  
+`https://drawsomething-59328-default-rtdb.europe-west1.firebasedatabase.app/.json`
 
 ## 🧰 Tecnologías utilizadas
 
 - **Kotlin**
 - **MVVM**
+- **Clean Architecture (simplificada)**
+- **Dagger Hilt** para inyección de dependencias
 - **ViewModel + LiveData**
 - **ViewBinding**
 - **Coroutines** para llamadas asíncronas
@@ -68,9 +80,10 @@ Este proyecto es un excelente punto de partida para:
 
 - Aprender a implementar el patrón MVVM en Android.
 - Comprender el flujo completo de datos desde una API hasta la interfaz.
-- Practicar con Retrofit y Firebase.
-- Ver cómo se estructuran apps reales usando capas limpias (domain, data, UI).
-- Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y `Coroutines`.
+- Practicar con Retrofit, Firebase y Coroutines.
+- Introducirse en Clean Architecture y buenas prácticas.
+- Aprender a implementar **inyección de dependencias con Hilt**.
+- Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y más.
 
 ## 🛠️ ¿Cómo correr este proyecto?
 
@@ -81,5 +94,4 @@ Este proyecto es un excelente punto de partida para:
 
 ---
 
-✨ Este proyecto está pensado como material de estudio y base para futuros desarrollos. Puedes expandirlo agregando una base de datos local, navegación entre pantallas, guardar citas favoritas, entre otros.
-
+✨ Este proyecto está pensado como material de estudio y base para futuros desarrollos. Puedes expandirlo agregando una base de datos local, navegación entre pantallas, guardar citas favoritas, paginación, pruebas unitarias, entre otros.
