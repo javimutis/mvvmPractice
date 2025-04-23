@@ -2,9 +2,8 @@ package com.javimutis.examplemvvm.data.model
 
 import com.google.gson.annotations.SerializedName
 
-// Modelo de datos que representa una "cita" (frase).
-// Tiene dos atributos: la frase (quote) y su autor (author).
+// Este es el "molde" o plantilla de cómo luce una cita (frase) que llega desde la API.
 data class QuoteModel(
-    @SerializedName("quote") val quote: String, // Frase como texto.
-    @SerializedName("author") val author: String // Nombre del autor.
+    @SerializedName("quote") val quote: String, // Texto de la cita
+    @SerializedName("author") val author: String // Autor de la cita
 )

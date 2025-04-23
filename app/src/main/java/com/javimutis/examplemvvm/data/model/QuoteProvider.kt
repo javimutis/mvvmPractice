@@ -3,11 +3,9 @@ package com.javimutis.examplemvvm.data.model
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-// Clase que actúa como una fuente temporal de datos.
-// Aquí se almacenarán las citas descargadas desde internet.
+@Singleton // Esta clase existirá como una sola instancia en toda la app.
 class QuoteProvider @Inject constructor() {
-    // Lista de citas que se puede compartir globalmente dentro de la app.
+
+    // Esta lista guarda temporalmente todas las citas descargadas.
     var quotes: List<QuoteModel> = emptyList()
 }
-

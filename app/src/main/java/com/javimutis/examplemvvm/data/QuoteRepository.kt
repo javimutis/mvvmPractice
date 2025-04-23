@@ -5,17 +5,15 @@ import com.javimutis.examplemvvm.data.model.QuoteProvider
 import com.javimutis.examplemvvm.data.network.QuoteService
 import javax.inject.Inject
 
-// El repositorio es el intermediario entre la fuente de datos (API) y el resto de la app.
+// El repositorio actúa como puente entre los datos de red y el resto de la app.
 class QuoteRepository @Inject constructor(
-    private val api: QuoteService, // Instancia del servicio que se comunica con la API.
-    private val quoteProvider: QuoteProvider // Guarda las citas en el "provider".
+    private val api: QuoteService,
+    private val quoteProvider: QuoteProvider
 ) {
-
-
-    // Función que obtiene todas las citas desde la API.
+    // Esta función obtiene las citas desde internet y las guarda localmente en el Provider.
     suspend fun getAllQuotes(): List<QuoteModel> {
-        val response = api.getQuotes() // Llama al servicio.
-        quoteProvider.quotes = response
-        return response // Devuelve la lista.
+        val response = api.getQuotes()
+        quoteProvider.quotes = response // Se almacenan para poder usarlas después (por ejemplo, para mostrar una aleatoria).
+        return response
     }
 }

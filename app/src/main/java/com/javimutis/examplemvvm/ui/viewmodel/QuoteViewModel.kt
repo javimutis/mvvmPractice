@@ -11,36 +11,34 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-// El ViewModel se encarga de manejar los datos que la vista necesita.
+// Este ViewModel maneja los datos que la vista necesita mostrar.
 class QuoteViewModel @Inject constructor(
-    private val getQuoteUseCase: GetQuoteUseCase, // Caso de uso para obtener todas las citas.
-    private val getRandomQuoteUseCase: GetRandomQuoteUseCase // Caso de uso para obtener una cita aleatoria.
+    private val getQuoteUseCase: GetQuoteUseCase,
+    private val getRandomQuoteUseCase: GetRandomQuoteUseCase
 ) : ViewModel() {
 
-    val quoteModel = MutableLiveData<QuoteModel>() // Cita actual que se mostrará en pantalla.
-    val isLoading = MutableLiveData<Boolean>() // Estado de carga: true si está cargando.
+    val quoteModel = MutableLiveData<QuoteModel>() // Donde guardamos la cita actual.
+    val isLoading = MutableLiveData<Boolean>() // Bandera para saber si estamos cargando datos.
 
-
-    // Esta función se llama cuando se crea la vista. Carga la primera cita.
+    // Esta función se llama al iniciar la vista. Carga la primera cita.
     fun onCreate() {
-        viewModelScope.launch { // Lanza una corrutina (tarea en segundo plano).
-            isLoading.postValue(true) // Muestra el loader.
-            val result = getQuoteUseCase() // Pide las citas al caso de uso.
+        viewModelScope.launch { // Ejecuta esta parte en segundo plano.
+            isLoading.postValue(true) // Mostramos el loader.
+            val result = getQuoteUseCase() // Llamamos al caso de uso que obtiene citas.
 
-            // Si se obtuvo una lista de citas, se muestra la primera.
             if (!result.isNullOrEmpty()) {
-                quoteModel.postValue(result[0])
-                isLoading.postValue(false) // Oculta el loader.
+                quoteModel.postValue(result[0]) // Mostramos la primera cita de la lista.
+                isLoading.postValue(false) // Ocultamos el loader.
             }
         }
     }
 
-    // Esta función se llama al hacer clic y muestra una cita aleatoria.
+    // Esta función se llama cuando el usuario toca la pantalla para ver otra cita.
     fun randomQuote() {
         isLoading.postValue(true)
-        val quote = getRandomQuoteUseCase()
+        val quote = getRandomQuoteUseCase() // Se pide una cita aleatoria.
         if (quote != null) {
-            quoteModel.postValue(quote) // Actualiza la UI con la nueva cita.
+            quoteModel.postValue(quote) // Mostramos esa cita.
         }
         isLoading.postValue(false)
     }

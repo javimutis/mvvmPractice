@@ -9,19 +9,22 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+// Este módulo define cómo crear e "inyectar" objetos que la app necesita.
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(SingletonComponent::class) // Estos objetos vivirán mientras la app esté viva.
 object NetworkModule {
+
+    // Provee una instancia de Retrofit.
     @Singleton
     @Provides
-    fun provideRetrofit():Retrofit{
+    fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            // URL base donde están los datos (en este caso, un Firebase).
             .baseUrl("https://drawsomething-59328-default-rtdb.europe-west1.firebasedatabase.app/")
-            // Indica que usaremos GSON para convertir datos JSON a objetos Kotlin.
             .addConverterFactory(GsonConverterFactory.create())
-            .build() // Crea y devuelve la instancia final de Retrofit.
+            .build()
     }
+
+    // Provee una instancia del cliente de API (que sabe cómo hacer la llamada GET).
     @Singleton
     @Provides
     fun provideQuoteApiClient(retrofit: Retrofit): QuoteApiClient {

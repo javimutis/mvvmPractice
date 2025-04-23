@@ -3,18 +3,18 @@ package com.javimutis.examplemvvm.core
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-// Objeto singleton que crea y configura una instancia de Retrofit.
-// Retrofit nos permite hacer peticiones HTTP (como obtener datos de internet).
+// Este objeto (singleton) sirve para crear una única instancia de Retrofit en toda la app.
+// Retrofit se usa para hacer solicitudes HTTP (como conectarse a un servidor web y pedir datos).
 object RetrofitHelper {
 
-    // Esta función devuelve una instancia ya configurada de Retrofit.
+    // Esta función devuelve una instancia de Retrofit ya configurada.
     fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
-            // URL base donde están los datos (en este caso, un Firebase).
+            // Aquí le decimos a Retrofit cuál es la dirección base de la API (en este caso, Firebase).
             .baseUrl("https://drawsomething-59328-default-rtdb.europe-west1.firebasedatabase.app/")
-            // Indica que usaremos GSON para convertir datos JSON a objetos Kotlin.
+            // Esta línea indica que los datos JSON que vienen de internet se van a convertir a objetos Kotlin.
             .addConverterFactory(GsonConverterFactory.create())
-            .build() // Crea y devuelve la instancia final de Retrofit.
-
+            // Finalmente, construimos la instancia de Retrofit y la devolvemos.
+            .build()
     }
 }

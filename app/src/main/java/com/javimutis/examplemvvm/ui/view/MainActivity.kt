@@ -14,44 +14,44 @@ import com.javimutis.examplemvvm.ui.viewmodel.QuoteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-// Pantalla principal de la app.
+// Esta es la pantalla principal de la app (la primera que se ve).
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding // Vincula el XML con el código Kotlin.
+    private lateinit var binding: ActivityMainBinding // Se usa para acceder al layout sin usar findViewById.
 
-    private val quoteViewModel: QuoteViewModel by viewModels() // Se obtiene el ViewModel de la vista.
+    // Obtenemos el ViewModel que tiene los datos que la vista va a mostrar.
+    private val quoteViewModel: QuoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        enableEdgeToEdge() // Hace que la vista use toda la pantalla, incluyendo la barra de estado.
+        enableEdgeToEdge() // Permite que el contenido use todo el espacio disponible (bajo la barra de estado).
 
-        // Inflamos (conectamos) el layout XML con el binding.
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater) // Conectamos el XML con Kotlin.
         setContentView(binding.root)
 
-        // Ajusta márgenes para evitar que la vista quede bajo la barra del sistema.
+        // Esto evita que el contenido se esconda bajo la barra superior del celular.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.viewContainer)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Llama a la función del ViewModel que carga la primera cita.
+        // Le decimos al ViewModel que cargue la primera cita.
         quoteViewModel.onCreate()
 
-        // Observamos la cita actual: si cambia, actualizamos la UI.
+        // Si cambia la cita en el ViewModel, actualizamos el texto en pantalla.
         quoteViewModel.quoteModel.observe(this, Observer { currentQuote ->
             binding.tvQuote.text = currentQuote.quote
             binding.tvAuthor.text = currentQuote.author
         })
 
-        // Observamos si está cargando: mostramos u ocultamos el "loader".
+        // Si el ViewModel está cargando, mostramos un spinner (loader).
         quoteViewModel.isLoading.observe(this, Observer {
             binding.progress.isVisible = it
         })
 
-        // Si el usuario toca la pantalla, se muestra una cita aleatoria.
+        // Si se toca la pantalla, se pide una cita aleatoria.
         binding.viewContainer.setOnClickListener { quoteViewModel.randomQuote() }
     }
 }
