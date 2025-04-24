@@ -5,6 +5,9 @@ plugins {
     alias(libs.plugins.kapt)
 
 }
+kotlin {
+    version = "1.9.0"
+}
 
 android {
     namespace = "com.javimutis.examplemvvm"
@@ -71,6 +74,10 @@ dependencies {
     //Dagger Hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    kapt(libs.room.compiler)
 }
 kapt {
     correctErrorTypes = true
