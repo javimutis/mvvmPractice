@@ -1,18 +1,19 @@
 package com.javimutis.examplemvvm.domain
 
-import com.javimutis.examplemvvm.data.model.QuoteProvider
+import com.javimutis.examplemvvm.data.QuoteRepository
 import com.javimutis.examplemvvm.data.model.QuoteModel
+import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 
 // Esta clase obtiene una cita aleatoria ya descargada.
-class GetRandomQuoteUseCase @Inject constructor(private val quoteProvider: QuoteProvider) {
+class GetRandomQuoteUseCase @Inject constructor(private val repository: QuoteRepository) {
 
-    operator fun invoke(): QuoteModel? {
-        val quotes = quoteProvider.quotes
+    suspend operator fun invoke(): Quote? {
+        val quotes = repository.getAllQuotesFromDatabase()
         if (!quotes.isNullOrEmpty()) {
-            val randomNumber = (quotes.indices).random() // Elige un índice aleatorio.
-            return quotes[randomNumber] // Devuelve la cita seleccionada.
+            val randomNumber = (quotes.indices).random()
+            return quotes[randomNumber]
         }
-        return null // Si no hay citas, devuelve null.
+        return null
     }
 }
