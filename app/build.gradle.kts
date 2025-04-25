@@ -5,9 +5,6 @@ plugins {
     alias(libs.plugins.kapt)
 
 }
-kotlin {
-    version = "1.9.0"
-}
 
 android {
     namespace = "com.javimutis.examplemvvm"
