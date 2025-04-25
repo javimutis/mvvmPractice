@@ -4,11 +4,11 @@ import com.javimutis.examplemvvm.data.model.QuoteModel
 import retrofit2.Response
 import retrofit2.http.GET
 
-// Esta interfaz define cómo se comunica Retrofit con el servidor (API).
+// Interfaz que describe cómo Retrofit se comunica con la API.
 interface QuoteApiClient {
 
-    // Esta función representa una solicitud HTTP GET a la ruta "/.json".
-    // Devuelve una lista de citas envuelta en un objeto Response.
+    // Método para obtener todas las frases desde la API (GET request a la raíz).
     @GET("/.json")
     suspend fun getAllQuotes(): Response<List<QuoteModel>>
 }
+

@@ -5,14 +5,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-// Esta clase se encarga de llamar a la API usando Retrofit.
+// Clase que llama a la API usando Retrofit.
+// Usa corrutinas para no bloquear la pantalla mientras descarga los datos.
 class QuoteService @Inject constructor(private val api: QuoteApiClient) {
 
-    // Esta función hace la solicitud en un hilo de fondo para no congelar la app.
+    // Función que llama a la API en segundo plano.
     suspend fun getQuotes(): List<QuoteModel> {
-        return withContext(Dispatchers.IO) { // Hilo especializado para operaciones de red o disco.
+        return withContext(Dispatchers.IO) {
             val response = api.getAllQuotes() // Llama a la API.
-            response.body() ?: emptyList() // Si la respuesta es válida, devuelve la lista de citas. Si no, devuelve una lista vacía.
+            response.body() ?: emptyList() // Si la respuesta existe, devuelve la lista; si no, lista vacía.
         }
     }
 }
+

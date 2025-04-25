@@ -5,7 +5,7 @@ import com.javimutis.examplemvvm.data.model.QuoteModel
 import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 
-// Esta clase obtiene una cita aleatoria ya descargada.
+// Esta clase devuelve una frase aleatoria de las que están guardadas localmente.
 class GetRandomQuoteUseCase @Inject constructor(private val repository: QuoteRepository) {
 
     suspend operator fun invoke(): Quote? {
@@ -14,6 +14,7 @@ class GetRandomQuoteUseCase @Inject constructor(private val repository: QuoteRep
             val randomNumber = (quotes.indices).random()
             return quotes[randomNumber]
         }
-        return null
+        return null // Si no hay frases, devuelve null.
     }
 }
+

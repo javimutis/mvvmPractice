@@ -5,8 +5,10 @@ import androidx.room.RoomDatabase
 import com.javimutis.examplemvvm.data.database.dao.QuoteDao
 import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
 
+// Esta clase define la base de datos Room.
 @Database(entities = [QuoteEntity::class], version = 1)
-abstract class QuoteDatabase: RoomDatabase() {
+abstract class QuoteDatabase : RoomDatabase() {
 
-    abstract fun getQuoteDao():QuoteDao
+    // Aquí decimos que usaremos el DAO que definimos antes.
+    abstract fun getQuoteDao(): QuoteDao
 }

@@ -9,12 +9,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-// Este módulo define cómo crear e "inyectar" objetos que la app necesita.
+// Módulo de Hilt para decir cómo se crean Retrofit y el cliente de API.
 @Module
-@InstallIn(SingletonComponent::class) // Estos objetos vivirán mientras la app esté viva.
+@InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    // Provee una instancia de Retrofit.
+    // Crea la instancia de Retrofit.
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit {
@@ -24,7 +24,7 @@ object NetworkModule {
             .build()
     }
 
-    // Provee una instancia del cliente de API (que sabe cómo hacer la llamada GET).
+    // Crea el cliente de API que usará Retrofit.
     @Singleton
     @Provides
     fun provideQuoteApiClient(retrofit: Retrofit): QuoteApiClient {

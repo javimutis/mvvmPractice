@@ -8,27 +8,31 @@ import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 import com.javimutis.examplemvvm.domain.model.toDomain
 
-// El repositorio actúa como puente entre los datos de red y el resto de la app.
+// El repositorio organiza de dónde vienen los datos: API o base de datos local.
 class QuoteRepository @Inject constructor(
     private val api: QuoteService,
     private val quoteDao: QuoteDao
 ) {
 
+    // Trae todas las frases desde la API.
     suspend fun getAllQuotesFromApi(): List<Quote> {
         val response: List<QuoteModel> = api.getQuotes()
-        return response.map { it.toDomain() }
+        return response.map { it.toDomain() } // Convierte los datos a objetos del dominio.
     }
 
-    suspend fun getAllQuotesFromDatabase():List<Quote>{
+    // Trae todas las frases guardadas en la base de datos local.
+    suspend fun getAllQuotesFromDatabase(): List<Quote> {
         val response: List<QuoteEntity> = quoteDao.getAllQuotes()
         return response.map { it.toDomain() }
     }
 
-    suspend fun insertQuotes(quotes:List<QuoteEntity>){
+    // Guarda una lista de frases en la base de datos.
+    suspend fun insertQuotes(quotes: List<QuoteEntity>) {
         quoteDao.insertAll(quotes)
     }
 
-    suspend fun clearQuotes(){
+    // Borra todas las frases guardadas.
+    suspend fun clearQuotes() {
         quoteDao.deleteAllQuotes()
     }
 }

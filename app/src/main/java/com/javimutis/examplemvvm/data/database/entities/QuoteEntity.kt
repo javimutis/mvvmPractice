@@ -5,13 +5,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.javimutis.examplemvvm.domain.model.Quote
 
+// Representa cómo se guarda una frase en la base de datos local (Room).
 @Entity(tableName = "quote_table")
 data class QuoteEntity(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true) // ID único generado automáticamente.
     @ColumnInfo(name = "id") val id: Int = 0,
-    @ColumnInfo(name = "quote") val quote: String,
-    @ColumnInfo(name = "author") val author: String
+    @ColumnInfo(name = "quote") val quote: String, // El texto de la frase.
+    @ColumnInfo(name = "author") val author: String // El autor de la frase.
 )
 
-
-fun Quote.toDatabase() = QuoteEntity(quote = quote, author =  author)
+// Esta función permite convertir una frase del dominio a una entidad para guardar en Room.
+fun Quote.toDatabase() = QuoteEntity(quote = quote, author = author)
