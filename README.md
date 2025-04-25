@@ -1,22 +1,25 @@
 # 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**.
+Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas.
 
 ## 👩‍🏫 ¿Qué hace esta app?
 
 - Al abrir la app, muestra una cita inspiradora aleatoria sobre programación.
 - Al hacer clic en cualquier parte de la pantalla, se muestra una nueva cita aleatoria.
 - Las citas provienen de una base de datos en línea (Firebase Realtime Database).
+- Una vez obtenidas, las citas se guardan localmente usando Room para acceder a ellas sin conexión.
+- Las citas aleatorias posteriores se cargan desde la base de datos local.
 
 ## 🧠 Arquitectura MVVM + Clean (simplificada)
 
 La app está dividida en capas para mantener el código ordenado, entendible y escalable:
 
 ### 🧱 Modelo (Model)
-Representa los datos y su origen (API en este caso).
+Representa los datos y su origen.
 
-- `QuoteModel.kt`: Modelo de datos que representa una cita (texto + autor).
-- `QuoteProvider.kt`: Contenedor temporal de citas (almacena la lista desde la API).
+- `QuoteModel.kt`: Modelo de dominio (cita con texto y autor).
+- `QuoteEntity.kt`: Entidad Room para persistencia local.
+- `QuoteProvider.kt`: Contenedor temporal de citas (ya no se usa directamente, pero puede ser útil).
 
 ### 🌐 Red (Network)
 Encargada de comunicarse con la API.
@@ -24,16 +27,25 @@ Encargada de comunicarse con la API.
 - `QuoteApiClient.kt`: Define el endpoint para obtener todas las citas desde Firebase usando Retrofit.
 - `QuoteService.kt`: Ejecuta la llamada a la API utilizando `RetrofitHelper`.
 
-### 📦 Repositorio (Repository)
-Intermediario entre los datos (API) y la lógica de negocio (Use Cases).
+### 🗄️ Base de datos local (Room)
+Permite guardar y recuperar citas localmente.
 
-- `QuoteRepository.kt`: Obtiene las citas desde el servicio de red y las guarda en el `QuoteProvider`.
+- `QuoteDao.kt`: Define las operaciones de base de datos (insertar, obtener todo, obtener una aleatoria).
+- `QuoteDatabase.kt`: Define la base de datos local Room.
+
+### 📦 Repositorio (Repository)
+Intermediario entre los datos (API / Room) y la lógica de negocio (Use Cases).
+
+- `QuoteRepository.kt`:
+    - Si es necesario, obtiene las citas desde el servicio de red.
+    - Las guarda en la base de datos Room.
+    - Devuelve citas al ViewModel desde Room.
 
 ### 🎯 Casos de Uso (UseCase)
-Contienen la lógica del negocio de la app (una capa opcional pero buena práctica).
+Contienen la lógica del negocio de la app.
 
-- `GetQuoteUseCase.kt`: Obtiene todas las citas desde el repositorio.
-- `GetRandomQuoteUseCase.kt`: Elige una cita aleatoria desde la lista cargada.
+- `GetQuotesUseCase.kt`: Obtiene todas las citas desde la API y las guarda localmente.
+- `GetRandomQuoteUseCase.kt`: Elige una cita aleatoria desde Room.
 
 ### 👁️ Vista (View)
 Se encarga de mostrar los datos al usuario y responder a sus interacciones.
@@ -51,7 +63,7 @@ La app utiliza **Dagger Hilt** para gestionar la inyección de dependencias de f
 
 - `@HiltAndroidApp`: Aplicación base configurada para usar Hilt.
 - `@Inject`: Se usa para proveer dependencias en clases como `QuoteViewModel`, `QuoteRepository`, y `QuoteService`.
-- `@Module` y `@InstallIn`: Se definen módulos para proveer Retrofit, el cliente de API y otras dependencias.
+- `@Module` y `@InstallIn`: Se definen módulos para proveer Retrofit, Room, el cliente de API y otras dependencias.
 
 Gracias a Hilt, las dependencias se inyectan automáticamente en el ViewModel y otras capas del proyecto, reduciendo el boilerplate y facilitando el mantenimiento.
 
@@ -67,6 +79,7 @@ Ejemplo de URL de la base de datos:
 - **Kotlin**
 - **MVVM**
 - **Clean Architecture (simplificada)**
+- **Room** como base de datos local
 - **Dagger Hilt** para inyección de dependencias
 - **ViewModel + LiveData**
 - **ViewBinding**
@@ -80,7 +93,7 @@ Este proyecto es un excelente punto de partida para:
 
 - Aprender a implementar el patrón MVVM en Android.
 - Comprender el flujo completo de datos desde una API hasta la interfaz.
-- Practicar con Retrofit, Firebase y Coroutines.
+- Practicar con Retrofit, Firebase, Coroutines y Room.
 - Introducirse en Clean Architecture y buenas prácticas.
 - Aprender a implementar **inyección de dependencias con Hilt**.
 - Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y más.
@@ -91,7 +104,8 @@ Este proyecto es un excelente punto de partida para:
 2. Abre el proyecto en Android Studio.
 3. Asegúrate de tener conexión a internet (las citas se cargan desde Firebase).
 4. Ejecuta la app en un emulador o dispositivo físico.
+5. La primera vez se cargan las citas desde la API. Luego, todo funciona desde la base de datos local.
 
 ---
 
-✨ Este proyecto está pensado como material de estudio y base para futuros desarrollos. Puedes expandirlo agregando una base de datos local, navegación entre pantallas, guardar citas favoritas, paginación, pruebas unitarias, entre otros.
+✨ Este proyecto está pensado como material de estudio y base para futuros desarrollos. Puedes expandirlo agregando navegación entre pantallas, guardar citas favoritas, paginación, pruebas unitarias, compartir citas, entre otros.
