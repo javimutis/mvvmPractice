@@ -17,29 +17,32 @@ class GetRandomQuoteUseCaseTest {
 
     @Before
     fun onBefore() {
-        MockKAnnotations.init(this)
+        MockKAnnotations.init(this) // Prepara los mocks
         getRandomQuoteUseCase = GetRandomQuoteUseCase(quoteRepository)
     }
 
     @Test
     fun `when the database is empty then return null`() = runBlocking {
-
-        //Given
+        // Given - Simula que la base local no tiene frases
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns emptyList()
-        //When
+
+        // When - Ejecuta el caso de uso
         val response = getRandomQuoteUseCase()
-        //Then
+
+        // Then - Verifica que el resultado sea null
         assert(response == null)
     }
 
     @Test
     fun `when the database is not empty then return a quote`() = runBlocking {
-        //Given
+        // Given - Simula que la base local tiene una frase
         val quoteList = listOf(Quote("cita", "autor"))
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns quoteList
-        //When
+
+        // When - Ejecuta el caso de uso
         val response = getRandomQuoteUseCase()
-        //Then
+
+        // Then - Verifica que se devuelva una frase (en este caso la única disponible)
         assert(response == quoteList.first())
     }
 }
