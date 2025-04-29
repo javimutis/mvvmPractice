@@ -1,7 +1,8 @@
 # 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas.
+Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas y **pruebas unitarias** para verificar la lógica de negocio.
 
+---
 ## 👩‍🏫 ¿Qué hace esta app?
 
 - Al abrir la app, muestra una cita inspiradora aleatoria sobre programación.
@@ -57,6 +58,23 @@ Conecta la vista con los datos y la lógica de negocio.
 
 - `QuoteViewModel.kt`: Se comunica con los casos de uso, mantiene el estado de la cita actual y la muestra a la vista usando `LiveData`.
 
+## 🧪 Pruebas Unitarias
+
+Este proyecto incluye pruebas unitarias que validan el comportamiento de los casos de uso principales:
+
+### ✅ `GetQuotesUseCaseTest.kt`
+
+- **Caso 1:** Si la API no retorna citas, se obtienen desde la base local.
+- **Caso 2:** Si la API retorna citas, se borran las anteriores, se guardan las nuevas y se retornan.
+
+### ✅ `GetRandomQuoteUseCaseTest.kt`
+
+- **Caso 1:** Si la base de datos está vacía, retorna `null`.
+- **Caso 2:** Si la base tiene citas, retorna una aleatoria.
+
+Las pruebas están escritas usando **MockK** y se ejecutan con **coroutines**.
+
+---
 ## 🧩 Inyección de dependencias con Dagger Hilt
 
 La app utiliza **Dagger Hilt** para gestionar la inyección de dependencias de forma eficiente y desacoplada. Esto permite una mejor escalabilidad y testeo del código.
@@ -86,6 +104,7 @@ Ejemplo de URL de la base de datos:
 - **Coroutines** para llamadas asíncronas
 - **Retrofit** para conectarse a la API
 - **Firebase Realtime Database** como fuente de datos
+- **MockK** para test unitarios
 
 ## 📖 ¿Para qué sirve este proyecto?
 
@@ -97,6 +116,7 @@ Este proyecto es un excelente punto de partida para:
 - Introducirse en Clean Architecture y buenas prácticas.
 - Aprender a implementar **inyección de dependencias con Hilt**.
 - Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y más.
+- Practicar pruebas unitarias con casos de uso reales.
 
 ## 🛠️ ¿Cómo correr este proyecto?
 
