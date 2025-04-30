@@ -25,7 +25,7 @@ object RoomModule {
             .fallbackToDestructiveMigration()
             .build()
 
-    // Provee el DAO que permite acceder a la base de datos.
+    // Proporciona el DAO para acceder a la base de datos.
     @Singleton
     @Provides
     fun provideQuoteDao(db: QuoteDatabase) = db.getQuoteDao()

@@ -11,66 +11,81 @@ import com.javimutis.examplemvvm.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-// Anotación que indica que Hilt va a encargarse de la inyección de dependencias en este ViewModel.
+// Esta anotación indica que esta clase será administrada por Hilt para inyección de dependencias.
 @HiltViewModel
 class QuoteViewModel @Inject constructor(
-    // Inyectamos los casos de uso que este ViewModel necesita para funcionar.
+    // Se inyectan los "casos de uso" y el repositorio que esta clase necesita.
     private val getQuotesUseCase: GetQuotesUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
     private val quoteRepository: QuoteRepository
 ) : ViewModel() {
 
-    // LiveData que contiene una cita (Quote). Esta será observada por la interfaz de usuario.
+    // LiveData que contiene una cita actual. La interfaz (UI) observa esto para mostrar el contenido.
     val quoteModel = MutableLiveData<Quote>()
 
-    // LiveData que indica si se está cargando información, útil para mostrar un ProgressBar.
+    // LiveData para indicar si la app está "cargando" algo (por ejemplo, mientras espera una API).
     val isLoading = MutableLiveData<Boolean>()
 
-    // Esta función se llama al iniciar la pantalla (por ejemplo, en onCreate de la actividad o fragmento).
+    // Función que se llama al iniciar la pantalla. Aquí se cargan las citas por primera vez.
     fun onCreate() {
-        // Lanzamos una corrutina para ejecutar código asincrónico sin bloquear el hilo principal.
+        // viewModelScope permite lanzar una "corrutina", que ejecuta tareas sin bloquear la interfaz.
         viewModelScope.launch {
-            // Mostramos el indicador de carga (por ejemplo, un spinner).
+            // Mostramos un indicador de carga (por ejemplo, un spinner).
             isLoading.postValue(true)
 
+            // Intentamos obtener las citas guardadas en la base de datos local.
             val localQuotes = quoteRepository.getAllQuotesFromDatabase()
 
             if(localQuotes.isNotEmpty()) {
+                // Si hay citas locales, elegimos una al azar y la mostramos.
                 quoteModel.postValue(localQuotes.random())
-            }else {
+            } else {
+                // Si no hay citas locales, las pedimos a la API (servidor en internet).
                 val apiQuotes = quoteRepository.getAllQuotesFromApi()
+
+                // Guardamos esas citas en la base de datos local para usarlas más adelante.
                 quoteRepository.insertQuotes(apiQuotes.map { it.toDatabase() })
+
+                // Mostramos una cita aleatoria de las que llegaron desde la API.
                 quoteModel.postValue(apiQuotes.random())
             }
-                // Ocultamos el indicador de carga.
-                isLoading.postValue(false)
 
+            // Ocultamos el indicador de carga.
+            isLoading.postValue(false)
         }
     }
+
+    // Esta función se llama cuando el usuario presiona el botón de "favorito".
     fun toggleFavorite() {
+        // Si hay una cita actual visible (quoteModel.value), la tomamos.
         quoteModel.value?.let { currentQuote ->
+            // Creamos una copia de la cita actual, cambiando su estado de favorito al contrario.
             val updatedQuote = currentQuote.copy(isFavorite = !currentQuote.isFavorite)
+
+            // Actualizamos la LiveData con la nueva cita (esto hará que la UI se actualice).
             quoteModel.value = updatedQuote
 
+            // Lanzamos una corrutina para actualizar esa cita en la base de datos.
             viewModelScope.launch {
+                // Le decimos al repositorio que actualice el valor "isFavorite" de esta cita.
                 quoteRepository.updateQuoteFavoriteStatus(updatedQuote)
             }
         }
     }
 
-    // Esta función permite mostrar una cita aleatoria desde la base de datos local.
+
+    // Esta función permite mostrar una cita aleatoria cuando el usuario presiona un botón.
     fun randomQuote() {
-        // Lanzamos una corrutina para obtener la cita sin bloquear la interfaz.
+        // Lanzamos una corrutina para que la operación sea asincrónica.
         viewModelScope.launch {
-            // Ejecutamos el caso de uso que devuelve una cita aleatoria.
+            // Ejecutamos el caso de uso que obtiene una cita aleatoria desde la base de datos.
             val quote = getRandomQuoteUseCase()
-            // Si la cita no es nula, la mostramos en pantalla.
+
+            // Si obtuvimos una cita, la mostramos.
             quote?.let {
                 quoteModel.postValue(it)
             }
         }
     }
-
-
 
 }

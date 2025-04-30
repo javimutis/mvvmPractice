@@ -9,11 +9,10 @@ import com.javimutis.examplemvvm.domain.model.Quote
 @Entity(tableName = "quote_table")
 data class QuoteEntity(
     @PrimaryKey
-    @ColumnInfo(name = "quote") val quote: String, // El texto de la frase.
-    @ColumnInfo(name = "author") val author: String, // El autor de la frase.
-    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean
+    @ColumnInfo(name = "quote") val quote: String, // El texto de la frase (clave primaria).
+    @ColumnInfo(name = "author") val author: String, // El nombre del autor.
+    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean // Indica si la frase está marcada como favorita.
 )
 
-
-// Esta función permite convertir una frase del dominio a una entidad para guardar en Room.
+// Convierte una frase del modelo de dominio (Quote) al modelo de base de datos (QuoteEntity).
 fun Quote.toDatabase() = QuoteEntity(quote = quote, author = author, isFavorite = isFavorite)

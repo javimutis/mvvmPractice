@@ -8,13 +8,19 @@ import com.javimutis.examplemvvm.data.model.QuoteModel
 data class Quote(
     val quote: String,
     val author: String,
-    val isFavorite: Boolean = false
+    val isFavorite: Boolean = false // Por defecto no es favorita.
 )
 
-// Estas funciones convierten los datos desde otros modelos hacia este.
+// Conversión desde la API al modelo de dominio (no guarda favorito aún).
 fun QuoteModel.toDomain() = Quote(
     quote = this.quote,
     author = this.author,
-    isFavorite = false
+    isFavorite = false // Se ignora el valor original por ahora.
 )
-fun QuoteEntity.toDomain() = Quote(quote = quote, author = author, isFavorite = isFavorite)
+
+// Conversión desde la base de datos al modelo de dominio.
+fun QuoteEntity.toDomain() = Quote(
+    quote = quote,
+    author = author,
+    isFavorite = isFavorite
+)

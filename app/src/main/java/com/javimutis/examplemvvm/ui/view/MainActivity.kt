@@ -17,55 +17,55 @@ import dagger.hilt.android.AndroidEntryPoint
 // Esta es la pantalla principal de la app (la primera que se ve).
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding // Se usa para acceder al layout sin usar findViewById.
+    private lateinit var binding: ActivityMainBinding
 
-    // Obtenemos el ViewModel que tiene los datos que la vista va a mostrar.
     private val quoteViewModel: QuoteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
-        enableEdgeToEdge() // Permite que el contenido use todo el espacio disponible (bajo la barra de estado).
-
-        binding = ActivityMainBinding.inflate(layoutInflater) // Conectamos el XML con Kotlin.
+        // Se enlaza el XML con el código.
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Esto evita que el contenido se esconda bajo la barra superior del celular.
+        // Ajusta el padding para evitar que la vista se esconda bajo las barras del sistema.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.viewContainer)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        // Le decimos al ViewModel que cargue la primera cita.
+        // Al iniciar, le pedimos al ViewModel que cargue una frase.
         quoteViewModel.onCreate()
 
-        // Si cambia la cita en el ViewModel, actualizamos el texto en pantalla.
+        // Observa los cambios de la frase actual.
         quoteViewModel.quoteModel.observe(this, Observer { currentQuote ->
             binding.tvQuote.text = currentQuote.quote
             binding.tvAuthor.text = currentQuote.author
 
+            // Muestra el ícono según si es favorita o no.
             if(currentQuote.isFavorite){
                 binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
             }else{
                 binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border)
             }
-
         })
 
-        // Si el ViewModel está cargando, mostramos un spinner (loader).
+        // Muestra u oculta el loader mientras se carga una frase.
         quoteViewModel.isLoading.observe(this, Observer {
             binding.progress.isVisible = it
         })
 
-        // Si se toca la pantalla, se pide una cita aleatoria.
-        binding.viewContainer.setOnClickListener { quoteViewModel.randomQuote() }
+        // Cambia la frase cuando el usuario toca la pantalla.
+        binding.viewContainer.setOnClickListener {
+            quoteViewModel.randomQuote()
+        }
 
-
-
+        // Cambia el estado de favorito al hacer clic en el botón.
         binding.favoriteButton.setOnClickListener {
             quoteViewModel.toggleFavorite()
         }
-
     }
 }
+

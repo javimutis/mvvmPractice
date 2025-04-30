@@ -9,6 +9,6 @@ import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
 @Database(entities = [QuoteEntity::class], version = 3)
 abstract class QuoteDatabase : RoomDatabase() {
 
-    // Aquí decimos que usaremos el DAO que definimos antes.
+    // Función para acceder al DAO y así poder operar sobre la base de datos.
     abstract fun getQuoteDao(): QuoteDao
 }

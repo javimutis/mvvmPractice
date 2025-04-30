@@ -14,18 +14,19 @@ class QuoteRepository @Inject constructor(
     private val quoteDao: QuoteDao
 ) {
 
-    // Trae todas las frases desde la API.
+    // Obtiene las frases desde la API.
     suspend fun getAllQuotesFromApi(): List<Quote> {
         val response: List<QuoteModel> = api.getQuotes()
-        return response.map { it.toDomain() } // Convierte los datos a objetos del dominio.
+        return response.map { it.toDomain() }
     }
 
-    // Trae todas las frases guardadas en la base de datos local.
+    // Obtiene las frases guardadas localmente.
     suspend fun getAllQuotesFromDatabase(): List<Quote> {
         val response: List<QuoteEntity> = quoteDao.getAllQuotes()
         return response.map { it.toDomain() }
     }
 
+    // Inserta frases nuevas en la base de datos (evita duplicados).
     suspend fun insertQuotes(quotes: List<QuoteEntity>) {
         for (quote in quotes) {
             val existing = quoteDao.getQuoteByText(quote.quote)
@@ -35,7 +36,7 @@ class QuoteRepository @Inject constructor(
         }
     }
 
-    // Borra todas las frases guardadas.
+    // Borra todas las frases.
     suspend fun clearQuotes() {
         quoteDao.deleteAllQuotes()
     }

@@ -9,13 +9,14 @@ import javax.inject.Inject
 class GetRandomQuoteUseCase @Inject constructor(
     private val repository: QuoteRepository) {
 
+    // Esta función devuelve una frase aleatoria de las que están en la base de datos local.
     suspend operator fun invoke(): Quote? {
-        val quotes = repository.getAllQuotesFromDatabase() // Pide todas las frases locales
+        val quotes = repository.getAllQuotesFromDatabase()
         if (!quotes.isNullOrEmpty()) {
-            val randomNumber = (quotes.indices).random() // Genera un índice aleatorio
-            return quotes[randomNumber] // Devuelve una frase aleatoria
+            val randomNumber = (quotes.indices).random()
+            return quotes[randomNumber]
         }
-        return null // Si no hay frases, devuelve null
+        return null
     }
 }
 
