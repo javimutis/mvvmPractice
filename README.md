@@ -12,6 +12,8 @@ Este proyecto es una aplicación sencilla que muestra citas relacionadas con la 
 - Las citas aleatorias posteriores se cargan desde la base de datos local.
 - ✅ **NUEVO:** Puedes marcar tus frases favoritas y la app las recordará.
 
+![Demo de la App](assets/demo.gif)
+
 ## 🧠 Arquitectura MVVM + Clean (simplificada)
 
 La app está dividida en capas para mantener el código ordenado, entendible y escalable:
