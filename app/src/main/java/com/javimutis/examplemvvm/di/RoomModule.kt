@@ -21,7 +21,9 @@ object RoomModule {
     @Singleton
     @Provides
     fun provideRoom(@ApplicationContext context: Context) =
-        Room.databaseBuilder(context, QuoteDatabase::class.java, QUOTE_DATABASE_NAME).build()
+        Room.databaseBuilder(context, QuoteDatabase::class.java, QUOTE_DATABASE_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
 
     // Provee el DAO que permite acceder a la base de datos.
     @Singleton

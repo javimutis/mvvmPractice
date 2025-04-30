@@ -5,5 +5,6 @@ import com.google.gson.annotations.SerializedName
 // Representa cómo viene una frase desde la API (formato JSON).
 data class QuoteModel(
     @SerializedName("quote") val quote: String,
-    @SerializedName("author") val author: String
+    @SerializedName("author") val author: String,
+    @SerializedName("isFavorite") val isFavorite: Boolean
 )

@@ -26,13 +26,25 @@ class QuoteRepository @Inject constructor(
         return response.map { it.toDomain() }
     }
 
-    // Guarda una lista de frases en la base de datos.
     suspend fun insertQuotes(quotes: List<QuoteEntity>) {
-        quoteDao.insertAll(quotes)
+        for (quote in quotes) {
+            val existing = quoteDao.getQuoteByText(quote.quote)
+            if (existing == null) {
+                quoteDao.insert(quote)
+            }
+        }
     }
 
     // Borra todas las frases guardadas.
     suspend fun clearQuotes() {
         quoteDao.deleteAllQuotes()
+    }
+    suspend fun updateQuoteFavoriteStatus(quote: Quote){
+        val entity = QuoteEntity(
+            quote = quote.quote,
+            author = quote.author,
+            isFavorite = quote.isFavorite
+        )
+        quoteDao.updateQuote(entity)
     }
 }

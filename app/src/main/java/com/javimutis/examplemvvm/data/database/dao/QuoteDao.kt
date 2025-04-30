@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
 
 // Esta interfaz indica cómo acceder a los datos en la base de datos Room.
@@ -15,11 +16,21 @@ interface QuoteDao {
     @Query("SELECT * FROM quote_table ORDER BY author DESC")
     suspend fun getAllQuotes(): List<QuoteEntity>
 
-    // Inserta una lista de frases. Si ya existen, las reemplaza.
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(quote: QuoteEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(quotes: List<QuoteEntity>)
 
     // Borra todas las frases guardadas.
     @Query("DELETE FROM quote_table")
     suspend fun deleteAllQuotes()
+
+    @Update
+    suspend fun updateQuote(quote: QuoteEntity)
+
+    @Query("SELECT * FROM quote_table WHERE quote = :quoteText LIMIT 1")
+    suspend fun getQuoteByText(quoteText: String): QuoteEntity?
+
+
 }

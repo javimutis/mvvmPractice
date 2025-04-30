@@ -3,6 +3,8 @@ package com.javimutis.examplemvvm.ui.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.javimutis.examplemvvm.data.QuoteRepository
+import com.javimutis.examplemvvm.data.database.entities.toDatabase
 import com.javimutis.examplemvvm.domain.GetQuotesUseCase
 import com.javimutis.examplemvvm.domain.GetRandomQuoteUseCase
 import com.javimutis.examplemvvm.domain.model.Quote
@@ -14,7 +16,8 @@ import javax.inject.Inject
 class QuoteViewModel @Inject constructor(
     // Inyectamos los casos de uso que este ViewModel necesita para funcionar.
     private val getQuotesUseCase: GetQuotesUseCase,
-    private val getRandomQuoteUseCase: GetRandomQuoteUseCase
+    private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
+    private val quoteRepository: QuoteRepository
 ) : ViewModel() {
 
     // LiveData que contiene una cita (Quote). Esta será observada por la interfaz de usuario.
@@ -30,15 +33,27 @@ class QuoteViewModel @Inject constructor(
             // Mostramos el indicador de carga (por ejemplo, un spinner).
             isLoading.postValue(true)
 
-            // Ejecutamos el caso de uso que intenta obtener citas desde la API o la base de datos.
-            val result = getQuotesUseCase()
+            val localQuotes = quoteRepository.getAllQuotesFromDatabase()
 
-            // Si se obtuvo una lista de citas...
-            if (result.isNotEmpty()) {
-                // Mostramos la primera cita en pantalla.
-                quoteModel.postValue(result.first())
+            if(localQuotes.isNotEmpty()) {
+                quoteModel.postValue(localQuotes.random())
+            }else {
+                val apiQuotes = quoteRepository.getAllQuotesFromApi()
+                quoteRepository.insertQuotes(apiQuotes.map { it.toDatabase() })
+                quoteModel.postValue(apiQuotes.random())
+            }
                 // Ocultamos el indicador de carga.
                 isLoading.postValue(false)
+
+        }
+    }
+    fun toggleFavorite() {
+        quoteModel.value?.let { currentQuote ->
+            val updatedQuote = currentQuote.copy(isFavorite = !currentQuote.isFavorite)
+            quoteModel.value = updatedQuote
+
+            viewModelScope.launch {
+                quoteRepository.updateQuoteFavoriteStatus(updatedQuote)
             }
         }
     }
@@ -55,4 +70,7 @@ class QuoteViewModel @Inject constructor(
             }
         }
     }
+
+
+
 }

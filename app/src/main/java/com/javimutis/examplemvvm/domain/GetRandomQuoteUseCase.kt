@@ -6,7 +6,8 @@ import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 
 // Este UseCase se encarga de obtener una frase aleatoria desde la base de datos local.
-class GetRandomQuoteUseCase @Inject constructor(private val repository: QuoteRepository) {
+class GetRandomQuoteUseCase @Inject constructor(
+    private val repository: QuoteRepository) {
 
     suspend operator fun invoke(): Quote? {
         val quotes = repository.getAllQuotesFromDatabase() // Pide todas las frases locales

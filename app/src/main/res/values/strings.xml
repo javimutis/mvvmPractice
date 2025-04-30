@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ExampleMVVM</string>
+    <string name="favorite">boton favorito</string>
 </resources>

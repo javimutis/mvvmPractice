@@ -44,6 +44,13 @@ class MainActivity : AppCompatActivity() {
         quoteViewModel.quoteModel.observe(this, Observer { currentQuote ->
             binding.tvQuote.text = currentQuote.quote
             binding.tvAuthor.text = currentQuote.author
+
+            if(currentQuote.isFavorite){
+                binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
+            }else{
+                binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border)
+            }
+
         })
 
         // Si el ViewModel está cargando, mostramos un spinner (loader).
@@ -53,5 +60,12 @@ class MainActivity : AppCompatActivity() {
 
         // Si se toca la pantalla, se pide una cita aleatoria.
         binding.viewContainer.setOnClickListener { quoteViewModel.randomQuote() }
+
+
+
+        binding.favoriteButton.setOnClickListener {
+            quoteViewModel.toggleFavorite()
+        }
+
     }
 }
