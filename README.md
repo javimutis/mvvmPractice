@@ -1,7 +1,8 @@
 # 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas y **pruebas unitarias** para verificar la lógica de negocio.
-🆕 Ahora incluye un botón para que el usuario pueda guardar sus frases favoritas ❤️.
+- Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. 
+- Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas y **pruebas unitarias** para verificar la lógica de negocio.
+- Ahora incluye un botón para que el usuario pueda guardar sus frases favoritas ❤️.
 ---
 ## 👩‍🏫 ¿Qué hace esta app?
 
