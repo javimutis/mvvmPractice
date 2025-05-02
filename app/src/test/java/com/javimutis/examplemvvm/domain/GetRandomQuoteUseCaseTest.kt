@@ -36,7 +36,7 @@ class GetRandomQuoteUseCaseTest {
     @Test
     fun `when the database is not empty then return a quote`() = runBlocking {
         // Given - Simula que la base local tiene una frase
-        val quoteList = listOf(Quote("cita", "autor"))
+        val quoteList = listOf(Quote("cita", "autor", false))
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns quoteList
 
         // When - Ejecuta el caso de uso
