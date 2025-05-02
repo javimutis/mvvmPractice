@@ -7,6 +7,7 @@ import com.javimutis.examplemvvm.data.QuoteRepository
 import com.javimutis.examplemvvm.data.database.entities.toDatabase
 import com.javimutis.examplemvvm.domain.GetQuotesUseCase
 import com.javimutis.examplemvvm.domain.GetRandomQuoteUseCase
+import com.javimutis.examplemvvm.domain.SetFavoriteQuoteUseCase
 import com.javimutis.examplemvvm.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,6 +18,7 @@ class QuoteViewModel @Inject constructor(
     // Se inyectan los "casos de uso" y el repositorio que esta clase necesita.
     private val getQuotesUseCase: GetQuotesUseCase,
     private val getRandomQuoteUseCase: GetRandomQuoteUseCase,
+    private val setFavoriteQuoteUseCase: SetFavoriteQuoteUseCase,
     private val quoteRepository: QuoteRepository
 ) : ViewModel() {
 
@@ -59,8 +61,9 @@ class QuoteViewModel @Inject constructor(
     fun toggleFavorite() {
         // Si hay una cita actual visible (quoteModel.value), la tomamos.
         quoteModel.value?.let { currentQuote ->
+            val newFavoriteStatus = !currentQuote.isFavorite
             // Creamos una copia de la cita actual, cambiando su estado de favorito al contrario.
-            val updatedQuote = currentQuote.copy(isFavorite = !currentQuote.isFavorite)
+            val updatedQuote = currentQuote.copy(isFavorite = newFavoriteStatus)
 
             // Actualizamos la LiveData con la nueva cita (esto hará que la UI se actualice).
             quoteModel.value = updatedQuote
@@ -68,7 +71,7 @@ class QuoteViewModel @Inject constructor(
             // Lanzamos una corrutina para actualizar esa cita en la base de datos.
             viewModelScope.launch {
                 // Le decimos al repositorio que actualice el valor "isFavorite" de esta cita.
-                quoteRepository.updateQuoteFavoriteStatus(updatedQuote)
+                setFavoriteQuoteUseCase(currentQuote, newFavoriteStatus)
             }
         }
     }

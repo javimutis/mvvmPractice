@@ -2,6 +2,7 @@ package com.javimutis.examplemvvm.data
 
 import com.javimutis.examplemvvm.data.database.dao.QuoteDao
 import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
+import com.javimutis.examplemvvm.data.database.entities.toDatabase
 import com.javimutis.examplemvvm.data.model.QuoteModel
 import com.javimutis.examplemvvm.data.network.QuoteService
 import com.javimutis.examplemvvm.domain.model.Quote
