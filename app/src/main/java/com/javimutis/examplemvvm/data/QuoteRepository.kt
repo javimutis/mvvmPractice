@@ -9,44 +9,46 @@ import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 import com.javimutis.examplemvvm.domain.model.toDomain
 
-// El repositorio organiza de dónde vienen los datos: API o base de datos local.
+// El repositorio actúa como puente entre la fuente de datos (API o base local) y la capa de dominio.
 class QuoteRepository @Inject constructor(
-    private val api: QuoteService,
-    private val quoteDao: QuoteDao
+    private val api: QuoteService,    // Fuente remota (API).
+    private val quoteDao: QuoteDao    // Fuente local (base de datos).
 ) {
 
-    // Obtiene las frases desde la API.
+    // Obtiene las frases desde la API remota (servidor).
     suspend fun getAllQuotesFromApi(): List<Quote> {
-        val response: List<QuoteModel> = api.getQuotes()
-        return response.map { it.toDomain() }
+        val response: List<QuoteModel> = api.getQuotes()     // Llama al servicio de red.
+        return response.map { it.toDomain() }               // Convierte los datos al modelo del dominio.
     }
 
-    // Obtiene las frases guardadas localmente.
+    // Obtiene las frases guardadas en la base de datos local.
     suspend fun getAllQuotesFromDatabase(): List<Quote> {
-        val response: List<QuoteEntity> = quoteDao.getAllQuotes()
-        return response.map { it.toDomain() }
+        val response: List<QuoteEntity> = quoteDao.getAllQuotes()  // Consulta la base local.
+        return response.map { it.toDomain() }                      // Convierte al modelo del dominio.
     }
 
-    // Inserta frases nuevas en la base de datos (evita duplicados).
+    // Inserta nuevas frases en la base de datos, evitando duplicados.
     suspend fun insertQuotes(quotes: List<QuoteEntity>) {
         for (quote in quotes) {
-            val existing = quoteDao.getQuoteByText(quote.quote)
+            val existing = quoteDao.getQuoteByText(quote.quote)   // Verifica si ya existe.
             if (existing == null) {
-                quoteDao.insert(quote)
+                quoteDao.insert(quote)                            // Si no existe, la inserta.
             }
         }
     }
 
-    // Borra todas las frases.
+    // Borra todas las frases de la base de datos.
     suspend fun clearQuotes() {
         quoteDao.deleteAllQuotes()
     }
-    suspend fun updateQuoteFavoriteStatus(quote: Quote){
+
+    // Actualiza el estado de favorito de una frase específica.
+    suspend fun updateQuoteFavoriteStatus(quote: Quote) {
         val entity = QuoteEntity(
             quote = quote.quote,
             author = quote.author,
             isFavorite = quote.isFavorite
         )
-        quoteDao.updateQuote(entity)
+        quoteDao.updateQuote(entity)  // Llama al DAO para actualizar en la base.
     }
 }
