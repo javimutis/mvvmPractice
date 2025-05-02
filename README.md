@@ -11,7 +11,7 @@
 - Las citas provienen de una base de datos en línea (Firebase Realtime Database).
 - Una vez obtenidas, las citas se guardan localmente usando Room para acceder a ellas sin conexión.
 - Las citas aleatorias posteriores se cargan desde la base de datos local.
-- ✅ **NUEVO:** Puedes marcar tus frases favoritas y la app las recordará.
+- Los usuarios pueden marcar sus frases favoritas y la app las recordará.
 
 ![Demo de la App](assets/demo.gif)
 
@@ -54,8 +54,7 @@ Contienen la lógica del negocio de la app.
 
 - `GetQuotesUseCase.kt`: Obtiene todas las citas desde la API y las guarda localmente.
 - `GetRandomQuoteUseCase.kt`: Elige una cita aleatoria desde Room.
-- **En desarrollo**: Falta incluir caso de uso para marcar/desmarcar como favorito.
-
+- `SetFavoriteQuoteUseCase.kt`: Marca/desmarca citas como favoritas.
 
 ### 👁️ Vista (View)
 Se encarga de mostrar los datos al usuario y responder a sus interacciones.
@@ -84,6 +83,12 @@ Este proyecto incluye pruebas unitarias que validan el comportamiento de los cas
 
 - **Caso 1:** Si la base de datos está vacía, retorna `null`.
 - **Caso 2:** Si la base tiene citas, retorna una aleatoria.
+
+### ✅ `SetFavoriteQuoteUseCaseTest.kt`
+
+- Marca una cita como favorita correctamente.
+- Desmarca una cita favorita correctamente.
+- Verifica que el estado guardado se respete.
 
 Las pruebas están escritas usando **MockK** y se ejecutan con **coroutines**.
 
@@ -130,6 +135,7 @@ Este proyecto es un excelente punto de partida para:
 - Aprender a implementar **inyección de dependencias con Hilt**.
 - Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y más.
 - Practicar pruebas unitarias con casos de uso reales.
+- Ampliar funcionalidades.
 
 ## 🛠️ ¿Cómo correr este proyecto?
 
