@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime)
     implementation(libs.androidx.lifecycle.livedata)
 
+
     //Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
@@ -74,6 +75,10 @@ dependencies {
     implementation(libs.room.ktx)
     kapt(libs.room.compiler)
 
+    // NavigationComponent
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+
     //Testing
     testImplementation(libs.junit)
     testImplementation(libs.mockk)
@@ -85,4 +90,5 @@ dependencies {
 }
 kapt {
     correctErrorTypes = true
+
 }

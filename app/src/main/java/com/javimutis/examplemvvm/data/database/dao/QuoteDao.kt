@@ -1,11 +1,13 @@
 package com.javimutis.examplemvvm.data.database.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
+import kotlinx.coroutines.flow.Flow
 
 // Esta interfaz indica cómo acceder a los datos en la base de datos Room.
 // DAO significa Data Access Object.
@@ -35,4 +37,7 @@ interface QuoteDao {
     // Busca una frase específica por su texto. Si existe, la devuelve.
     @Query("SELECT * FROM quote_table WHERE quote = :quoteText LIMIT 1")
     suspend fun getQuoteByText(quoteText: String): QuoteEntity?
+
+    @Query("SELECT * FROM quote_table WHERE isFavorite = 1")
+    fun getFavoriteQuotes(): Flow<List<QuoteEntity>>
 }

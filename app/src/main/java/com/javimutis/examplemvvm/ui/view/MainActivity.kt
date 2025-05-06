@@ -29,6 +29,22 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bottomNavView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navQuotesFragment -> {
+                    // Maneja cambio de pantalla a la sección de todas las citas
+                    true
+                }
+                R.id.navFavoritesFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(binding.viewContainer.id, FavoriteQuotesFragment())
+                        .commit()
+                    true
+                }
+                else -> false
+            }
+        }
+
         // Ajusta el padding para evitar que la vista se esconda bajo las barras del sistema.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.viewContainer)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

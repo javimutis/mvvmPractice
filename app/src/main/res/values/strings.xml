@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">ExampleMVVM</string>
     <string name="favorite">boton favorito</string>
+    <string name="favorites">favoritas</string>
+    <string name="quotes">citas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="fav_quotes">Mis Citas Favoritas</string>
+    <string name="home">home</string>
 </resources>
