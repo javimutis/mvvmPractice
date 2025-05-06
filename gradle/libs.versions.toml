@@ -20,6 +20,7 @@ hilt-compiler = "2.48"
 room = "2.6.1"
 mockk = "1.13.5"
 coreTesting = "2.2.0"
+navigation = "2.7.5"
 
 
 [libraries]
@@ -46,6 +47,9 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+# Navigation
+androidx-navigation-fragment = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
+androidx-navigation-ui = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 
 # Coroutines
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }

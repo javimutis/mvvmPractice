@@ -2,12 +2,14 @@ package com.javimutis.examplemvvm.data
 
 import com.javimutis.examplemvvm.data.database.dao.QuoteDao
 import com.javimutis.examplemvvm.data.database.entities.QuoteEntity
-import com.javimutis.examplemvvm.data.database.entities.toDatabase
 import com.javimutis.examplemvvm.data.model.QuoteModel
 import com.javimutis.examplemvvm.data.network.QuoteService
 import com.javimutis.examplemvvm.domain.model.Quote
-import javax.inject.Inject
 import com.javimutis.examplemvvm.domain.model.toDomain
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
 
 // El repositorio actúa como puente entre la fuente de datos (API o base local) y la capa de dominio.
 class QuoteRepository @Inject constructor(
@@ -50,5 +52,10 @@ class QuoteRepository @Inject constructor(
             isFavorite = quote.isFavorite
         )
         quoteDao.updateQuote(entity)  // Llama al DAO para actualizar en la base.
+    }
+
+    fun getFavoriteQuotes(): Flow<List<Quote>> {
+        return quoteDao.getFavoriteQuotes()
+            .map { entities -> entities.map { it.toDomain() } }
     }
 }
