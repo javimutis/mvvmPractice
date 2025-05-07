@@ -33,7 +33,7 @@ class FavoriteQuotesViewModel @Inject constructor(
         favoritesJob?.cancel()
         favoritesJob = viewModelScope.launch {
             getFavoriteQuoteUseCase().collectLatest { quotes ->
-                Log.d("FavoriteQuotesViewModel", "Fetched favorites: ${quotes.size}")
+                println("FavoriteQuotesViewModel: Fetched favorites: ${quotes.size}")
                 _favoriteQuotes.value = quotes
             }
         }

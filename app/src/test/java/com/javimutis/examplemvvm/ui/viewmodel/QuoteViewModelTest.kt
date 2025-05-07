@@ -8,7 +8,10 @@ import com.javimutis.examplemvvm.domain.SetFavoriteQuoteUseCase
 import com.javimutis.examplemvvm.domain.model.Quote
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
@@ -23,7 +26,6 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class QuoteViewModelTest {
 
-    // Creamos mocks relajados (no necesitamos configurar todas las respuestas).
     @RelaxedMockK
     private lateinit var getQuotesUseCase: GetQuotesUseCase
 
@@ -36,84 +38,79 @@ class QuoteViewModelTest {
     @RelaxedMockK
     private lateinit var quoteRepository: QuoteRepository
 
-    // ViewModel a probar
-    @RelaxedMockK
     private lateinit var quoteViewModel: QuoteViewModel
 
-    // Permite que LiveData se ejecute instantáneamente en tests (sin esperar al hilo principal)
-    @get:Rule val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+    @get:Rule
+    val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun onBefore() {
-        MockKAnnotations.init(this) // Inicializa los mocks
-        quoteViewModel = QuoteViewModel( // Inyectamos dependencias al ViewModel
+        MockKAnnotations.init(this)
+        quoteViewModel = QuoteViewModel(
             getQuotesUseCase, getRandomQuoteUseCase, setFavoriteQuoteUseCase, quoteRepository
         )
-        Dispatchers.setMain(Dispatchers.Unconfined) // Usamos un dispatcher de prueba
+        Dispatchers.setMain(Dispatchers.Unconfined)
     }
 
     @After
     fun onAfter() {
-        Dispatchers.resetMain() // Restauramos el dispatcher original después de cada test
+        Dispatchers.resetMain()
     }
+
     @Test
-    fun `when view model is created at the first time, get all quotes and set the first value`() = runTest {
-        // Given: Creamos una lista simulada de citas
+    fun `when view model is created at the first time, get a local or API quote`() = runTest {
         val quoteList = listOf(Quote("Cita1", "Autor1"), Quote("Cita2", "Autor2"))
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns quoteList
 
-        // When: Simulamos que el ViewModel se inicializa
         quoteViewModel.onCreate()
 
-        // Then: Verificamos que LiveData contiene alguna de las citas de la lista (normalmente la primera)
-        assert(quoteViewModel.quoteModel.value in quoteList)
+        assertTrue(quoteViewModel.quoteModel.value in quoteList)
     }
 
     @Test
-    fun `when randomQuoteUseCase return a quote set on the livedata`() = runTest {
-        // Given: Configuramos que el caso de uso devuelva una cita específica
+    fun `when randomQuoteUseCase returns a quote, set on the LiveData`() = runTest {
         val quote = Quote("Cita1", "Autor1")
         coEvery { getRandomQuoteUseCase() } returns quote
 
-        // When: Llamamos a la función que obtiene una cita aleatoria
         quoteViewModel.randomQuote()
 
-        // Then: Verificamos que LiveData ahora contiene esa cita
-        assert(quoteViewModel.quoteModel.value == quote)
+        assertEquals(quote, quoteViewModel.quoteModel.value)
     }
 
     @Test
-    fun `if randomQuoteUseCase return null, keep the last value`() = runTest {
-        // Given: Tenemos una cita ya cargada en LiveData
+    fun `if randomQuoteUseCase returns null, keep the last value`() = runTest {
         val quote = Quote("Cita1", "Autor1")
         quoteViewModel.quoteModel.value = quote
 
-        // Configuramos que el caso de uso devuelva null (no hay nueva cita)
         coEvery { getRandomQuoteUseCase() } returns null
 
-        // When: Llamamos a randomQuote()
         quoteViewModel.randomQuote()
 
-        // Then: Verificamos que LiveData mantiene la misma cita, no cambia
-        assert(quoteViewModel.quoteModel.value == quote)
+        assertEquals(quote, quoteViewModel.quoteModel.value)
     }
 
     @Test
     fun `when no local quotes, get all quotes from API and set one`() = runTest {
-        // Given: Simulamos que no hay datos locales
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns emptyList()
 
-        // Simulamos obtener citas desde la API
         val apiQuotes = listOf(Quote("ApiCita1", "ApiAutor1"), Quote("ApiCita2", "ApiAutor2"))
         coEvery { quoteRepository.getAllQuotesFromApi() } returns apiQuotes
 
-        // Simulamos que insertar en la base de datos no hace nada (Unit)
         coEvery { quoteRepository.insertQuotes(any()) } returns Unit
 
-        // When: Llamamos a la función de inicio
         quoteViewModel.onCreate()
 
-        // Then: Verificamos que LiveData contiene alguna cita de la API
-        assert(quoteViewModel.quoteModel.value in apiQuotes)
+        assertTrue(quoteViewModel.quoteModel.value in apiQuotes)
+    }
+
+    @Test
+    fun `toggle favorite updates the LiveData and calls UseCase with correct parameters`() = runTest {
+        val initialQuote = Quote("Cita1", "Autor1", false)
+        quoteViewModel.quoteModel.value = initialQuote
+
+        quoteViewModel.toggleFavorite()
+
+        assertEquals(true, quoteViewModel.quoteModel.value?.isFavorite)
+        coVerify { setFavoriteQuoteUseCase(initialQuote, true) }
     }
 }
