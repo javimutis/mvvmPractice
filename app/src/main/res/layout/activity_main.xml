@@ -64,13 +64,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/menu"
-        app:itemActiveIndicatorStyle="@null"
         app:itemIconSize="24dp"
+        app:itemActiveIndicatorStyle="@null"
         app:itemIconTint="@color/primary"
         app:itemTextColor="@color/primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
