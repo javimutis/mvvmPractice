@@ -26,8 +26,7 @@ class FavoriteQuotesAdapter :
 
 class QuoteDiffCallback : DiffUtil.ItemCallback<Quote>() {
     override fun areItemsTheSame(oldItem: Quote, newItem: Quote): Boolean {
-        // Si tienes un ID único, úsalo aquí
-        return oldItem.quote == newItem.quote && oldItem.author == newItem.author
+        return oldItem.quote == newItem.quote
     }
 
     override fun areContentsTheSame(oldItem: Quote, newItem: Quote): Boolean {

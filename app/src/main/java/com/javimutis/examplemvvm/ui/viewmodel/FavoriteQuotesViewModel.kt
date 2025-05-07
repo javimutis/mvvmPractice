@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.javimutis.examplemvvm.domain.GetFavoriteQuoteUseCase
 import com.javimutis.examplemvvm.domain.model.Quote
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -20,17 +21,21 @@ class FavoriteQuotesViewModel @Inject constructor(
     private val _favoriteQuotes = MutableStateFlow<List<Quote>>(emptyList())
     val favoriteQuotes: StateFlow<List<Quote>> = _favoriteQuotes
 
+    private var favoritesJob: Job? = null
+
     init {
-        getFavoriteQuotes()
+        // Iniciar automáticamente al crear el ViewModel
+        refreshFavorites()
     }
 
-    private fun getFavoriteQuotes() {
-        viewModelScope.launch {
+    fun refreshFavorites() {
+        // Cancelar colección previa para evitar múltiples flujos activos
+        favoritesJob?.cancel()
+        favoritesJob = viewModelScope.launch {
             getFavoriteQuoteUseCase().collectLatest { quotes ->
                 Log.d("FavoriteQuotesViewModel", "Fetched favorites: ${quotes.size}")
                 _favoriteQuotes.value = quotes
             }
         }
     }
-
 }

@@ -32,9 +32,12 @@ class QuoteRepository @Inject constructor(
     // Inserta nuevas frases en la base de datos, evitando duplicados.
     suspend fun insertQuotes(quotes: List<QuoteEntity>) {
         for (quote in quotes) {
-            val existing = quoteDao.getQuoteByText(quote.quote)   // Verifica si ya existe.
+            val existing = quoteDao.getQuoteByText(quote.quote)
             if (existing == null) {
-                quoteDao.insert(quote)                            // Si no existe, la inserta.
+                quoteDao.insert(quote)
+            } else {
+                // Actualiza autor, pero respeta favorito
+                quoteDao.updateQuote(existing.copy(author = quote.author))
             }
         }
     }
