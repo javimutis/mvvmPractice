@@ -38,8 +38,10 @@ class FavoriteQuotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initUI()
+        binding.progressBar.visibility = View.VISIBLE
         observeFavorites()
     }
+
 
     private fun initUI() {
         adapter = FavoriteQuotesAdapter()
@@ -51,7 +53,15 @@ class FavoriteQuotesFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 favoriteQuotesViewModel.favoriteQuotes.collectLatest { favorites ->
-                    adapter.submitList(favorites)
+                    binding.progressBar.visibility = View.GONE
+                    if (favorites.isEmpty()) {
+                        binding.rvFavorites.visibility = View.GONE
+                        binding.tvEmptyMessage.visibility = View.VISIBLE
+                    } else {
+                        binding.rvFavorites.visibility = View.VISIBLE
+                        binding.tvEmptyMessage.visibility = View.GONE
+                        adapter.submitList(favorites)
+                    }
                 }
             }
         }
