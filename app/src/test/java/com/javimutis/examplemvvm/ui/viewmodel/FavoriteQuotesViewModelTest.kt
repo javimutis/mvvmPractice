@@ -24,76 +24,73 @@ import org.junit.Test
 class FavoriteQuotesViewModelTest {
 
     @RelaxedMockK
-    private lateinit var getFavoriteQuoteUseCase: GetFavoriteQuoteUseCase
+    private lateinit var getFavoriteQuoteUseCase: GetFavoriteQuoteUseCase  // Mock del caso de uso
 
-    private lateinit var favoriteQuotesViewModel: FavoriteQuotesViewModel
+    private lateinit var favoriteQuotesViewModel: FavoriteQuotesViewModel  // ViewModel a testear
 
     @get:Rule
-    val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()
+    val rule: InstantTaskExecutorRule = InstantTaskExecutorRule()  // Permite testear LiveData
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()  // Dispatcher de prueba
 
     @Before
     fun onBefore() {
+        // Inicializamos mocks y configuramos el main dispatcher de test
         MockKAnnotations.init(this)
         Dispatchers.setMain(testDispatcher)
-        // Configure el mock del caso de uso para devolver un flujo vacío al inicio
+        // Simulamos que el use case inicialmente devuelve lista vacía
         coEvery { getFavoriteQuoteUseCase() } returns flowOf(emptyList())
+        // Creamos el ViewModel con el mock
         favoriteQuotesViewModel = FavoriteQuotesViewModel(getFavoriteQuoteUseCase)
     }
 
     @After
     fun onAfter() {
+        // Reseteamos el dispatcher principal
         Dispatchers.resetMain()
     }
 
     @Test
     fun `when view model is created, it fetches favorite quotes`() = runTest {
-        // Given: Una lista simulada de citas favoritas
+        // Given: Lista simulada de favoritas
         val favoriteQuotes = listOf(
             Quote("Cita favorita 1", "Autor 1", true),
             Quote("Cita favorita 2", "Autor 2", true)
         )
-        // Cambiar el flujo que devuelve `getFavoriteQuoteUseCase`
+        // Cambiamos el use case para que devuelva estas citas
         coEvery { getFavoriteQuoteUseCase() } returns flowOf(favoriteQuotes)
 
-        // When: Refrescamos las citas favoritas
+        // When: Refrescamos favoritas
         favoriteQuotesViewModel.refreshFavorites()
+        advanceUntilIdle()  // Esperamos que las corutinas terminen
 
-        // Esperar un tiempo para permitir que las corutinas actualicen el estado
-        advanceUntilIdle()
-
-        // Then: Verificamos que el StateFlow contiene las citas simuladas
+        // Then: El ViewModel tiene las citas simuladas en su StateFlow
         assertEquals(favoriteQuotes, favoriteQuotesViewModel.favoriteQuotes.value)
     }
 
     @Test
     fun `when refreshFavorites is called, it updates the favoriteQuotes state flow`() = runTest {
-        // Given: Inicialmente no hay citas favoritas
+        // Given: Use case devuelve lista vacía
         coEvery { getFavoriteQuoteUseCase() } returns flowOf(emptyList())
 
         // When: Llamamos a refreshFavorites
         favoriteQuotesViewModel.refreshFavorites()
-
-        // Esperar un tiempo para permitir que las corutinas actualicen el estado
         advanceUntilIdle()
 
         // Then: El flujo inicial es vacío
         assertEquals(emptyList<Quote>(), favoriteQuotesViewModel.favoriteQuotes.value)
 
-        // Cambiamos el caso de uso para devolver nuevas citas
+        // Given: Cambiamos el use case para devolver nuevas favoritas
         val newFavoriteQuotes = listOf(
             Quote("Nueva cita favorita 1", "Autor A", true)
         )
         coEvery { getFavoriteQuoteUseCase() } returns flowOf(newFavoriteQuotes)
 
-        // Refrescamos las citas favoritas nuevamente
+        // When: Refrescamos nuevamente
         favoriteQuotesViewModel.refreshFavorites()
-
-        // Esperar un tiempo para permitir que las corutinas actualicen el estado
         advanceUntilIdle()
 
-        // El flujo ahora debería contener las nuevas citas
+        // Then: El flujo ahora contiene las nuevas citas
         assertEquals(newFavoriteQuotes, favoriteQuotesViewModel.favoriteQuotes.value)
     }
 }

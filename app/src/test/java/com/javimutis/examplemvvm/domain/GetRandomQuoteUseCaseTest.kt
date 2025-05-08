@@ -9,40 +9,44 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
 
-//Aquí probamos que el caso de uso que obtiene una cita aleatoria se comporte bien, devolviendo null si no hay citas, o devolviendo una válida si existen.
 class GetRandomQuoteUseCaseTest {
 
-    @RelaxedMockK private lateinit var quoteRepository: QuoteRepository
-    lateinit var getRandomQuoteUseCase: GetRandomQuoteUseCase
+    @RelaxedMockK
+    private lateinit var quoteRepository: QuoteRepository  // Repositorio simulado
+
+    lateinit var getRandomQuoteUseCase: GetRandomQuoteUseCase  // Caso de uso
 
     @Before
     fun onBefore() {
-        MockKAnnotations.init(this) // Inicializamos los mocks
-        getRandomQuoteUseCase = GetRandomQuoteUseCase(quoteRepository) // Inyectamos el repositorio simulado
+        // Inicializamos mocks
+        MockKAnnotations.init(this)
+        // Inyectamos el mock al caso de uso
+        getRandomQuoteUseCase = GetRandomQuoteUseCase(quoteRepository)
     }
 
     @Test
     fun `when the database is empty then return null`() = runBlocking {
-        // Given: Simulamos que la base local no tiene citas
+        // Given: Base local vacía
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns emptyList()
 
         // When: Ejecutamos el caso de uso
         val response = getRandomQuoteUseCase()
 
-        // Then: Esperamos que el resultado sea null
+        // Then: El resultado debe ser null
         assert(response == null)
     }
 
     @Test
     fun `when the database is not empty then return a quote`() = runBlocking {
-        // Given: Simulamos que la base local tiene una cita
+        // Given: Base local con una cita
         val quoteList = listOf(Quote("cita", "autor", false))
         coEvery { quoteRepository.getAllQuotesFromDatabase() } returns quoteList
 
         // When: Ejecutamos el caso de uso
         val response = getRandomQuoteUseCase()
 
-        // Then: Esperamos que devuelva una cita (en este caso, la única disponible)
+        // Then: El resultado es la cita disponible
         assert(response == quoteList.first())
     }
 }
+
