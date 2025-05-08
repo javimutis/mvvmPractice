@@ -31,36 +31,37 @@ class FavoriteQuotesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        // Inflamos el layout del fragmento
         _binding = FragmentFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initUI()
-        binding.progressBar.visibility = View.VISIBLE
-        observeFavorites()
+        initUI()  // Inicializamos la interfaz (RecyclerView, Adapter)
+        binding.progressBar.visibility = View.VISIBLE  // Mostramos la barra de carga
+        observeFavorites()  // Empezamos a escuchar los cambios en favoritos
     }
 
-
     private fun initUI() {
-        adapter = FavoriteQuotesAdapter()
-        binding.rvFavorites.adapter = adapter
-        binding.rvFavorites.layoutManager = LinearLayoutManager(requireContext())
+        adapter = FavoriteQuotesAdapter()  // Creamos el adapter
+        binding.rvFavorites.adapter = adapter  // Lo conectamos al RecyclerView
+        binding.rvFavorites.layoutManager = LinearLayoutManager(requireContext())  // Ponemos un layout lineal (lista vertical)
     }
 
     private fun observeFavorites() {
+        // Escuchamos los cambios en el ViewModel usando coroutines
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 favoriteQuotesViewModel.favoriteQuotes.collectLatest { favorites ->
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.visibility = View.GONE  // Ocultamos la barra de carga
                     if (favorites.isEmpty()) {
                         binding.rvFavorites.visibility = View.GONE
-                        binding.tvEmptyMessage.visibility = View.VISIBLE
+                        binding.tvEmptyMessage.visibility = View.VISIBLE  // Mostramos mensaje vacío
                     } else {
                         binding.rvFavorites.visibility = View.VISIBLE
                         binding.tvEmptyMessage.visibility = View.GONE
-                        adapter.submitList(favorites)
+                        adapter.submitList(favorites)  // Mandamos la lista al adapter para que la dibuje
                     }
                 }
             }
@@ -69,6 +70,6 @@ class FavoriteQuotesFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null  // Evitamos fugas de memoria
     }
 }

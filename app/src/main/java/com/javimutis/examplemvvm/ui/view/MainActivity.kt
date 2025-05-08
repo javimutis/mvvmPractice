@@ -20,19 +20,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge()  // Habilitamos pantalla completa sin bordes
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Si es la primera vez (no hay savedInstanceState), mostramos QuoteFragment por defecto
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .replace(binding.viewContainer.id, QuoteFragment())
                 .commit()
         }
 
+        // Configuramos la navegación inferior (BottomNavView)
         binding.bottomNavView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navQuotesFragment -> {
+                    // Navegamos al fragmento de frases
                     supportFragmentManager.beginTransaction()
                         .replace(binding.viewContainer.id, QuoteFragment())
                         .addToBackStack(null)
@@ -40,6 +43,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.navFavoritesFragment -> {
+                    // Navegamos al fragmento de favoritos
                     supportFragmentManager.beginTransaction()
                         .replace(binding.viewContainer.id, FavoriteQuotesFragment())
                         .addToBackStack(null)
@@ -50,6 +54,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Ajustamos el padding según las barras del sistema (barra superior e inferior)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.viewContainer)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

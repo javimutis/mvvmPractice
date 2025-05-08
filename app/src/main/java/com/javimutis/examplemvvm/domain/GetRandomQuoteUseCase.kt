@@ -4,19 +4,20 @@ import com.javimutis.examplemvvm.data.QuoteRepository
 import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 
-// Este UseCase se encarga de obtener una frase aleatoria desde la base de datos local.
+// Caso de uso para obtener una frase aleatoria de la base local.
 class GetRandomQuoteUseCase @Inject constructor(
     private val repository: QuoteRepository
 ) {
 
-    // Esta función devuelve una frase aleatoria de las que están en la base de datos local.
+    // Función que devuelve una frase aleatoria (o null si no hay ninguna guardada).
     suspend operator fun invoke(): Quote? {
-        val quotes = repository.getAllQuotesFromDatabase()
-        if (!quotes.isNullOrEmpty()) {
-            val randomNumber = (quotes.indices).random()
-            return quotes[randomNumber]
+        val quotes = repository.getAllQuotesFromDatabase() // Trae todas las frases locales.
+        if (!quotes.isNullOrEmpty()) {                    // Si la lista no está vacía:
+            val randomNumber = (quotes.indices).random()  // Elige un índice aleatorio.
+            return quotes[randomNumber]                  // Devuelve la frase aleatoria.
         }
-        return null
+        return null                                       // Si no hay frases, devuelve null.
     }
 }
+
 

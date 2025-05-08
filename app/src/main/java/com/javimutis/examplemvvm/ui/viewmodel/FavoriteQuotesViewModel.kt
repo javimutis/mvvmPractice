@@ -15,26 +15,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FavoriteQuotesViewModel @Inject constructor(
-    private val getFavoriteQuoteUseCase: GetFavoriteQuoteUseCase
+    private val getFavoriteQuoteUseCase: GetFavoriteQuoteUseCase  // Caso de uso para obtener favoritos
 ) : ViewModel() {
 
-    private val _favoriteQuotes = MutableStateFlow<List<Quote>>(emptyList())
-    val favoriteQuotes: StateFlow<List<Quote>> = _favoriteQuotes
+    private val _favoriteQuotes = MutableStateFlow<List<Quote>>(emptyList())  // Estado interno (mutable)
+    val favoriteQuotes: StateFlow<List<Quote>> = _favoriteQuotes             // Estado expuesto (solo lectura)
 
-    private var favoritesJob: Job? = null
+    private var favoritesJob: Job? = null  // Referencia al Job para poder cancelarlo si es necesario
 
     init {
-        // Iniciar automáticamente al crear el ViewModel
+        // Al crear el ViewModel, cargamos los favoritos automáticamente
         refreshFavorites()
     }
 
     fun refreshFavorites() {
-        // Cancelar colección previa para evitar múltiples flujos activos
+        // Cancelamos colección previa para no tener múltiples escuchas al mismo tiempo
         favoritesJob?.cancel()
         favoritesJob = viewModelScope.launch {
             getFavoriteQuoteUseCase().collectLatest { quotes ->
                 println("FavoriteQuotesViewModel: Fetched favorites: ${quotes.size}")
-                _favoriteQuotes.value = quotes
+                _favoriteQuotes.value = quotes  // Actualizamos el flujo
             }
         }
     }
