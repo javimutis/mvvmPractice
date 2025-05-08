@@ -1,17 +1,20 @@
 # 📱 App de Citas de Programadores - Ejemplo MVVM en Android
 
-- Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación. 
-- Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture**, e implementa **inyección de dependencias con Dagger Hilt**. También incorpora una **base de datos local con Room** para persistir las citas y **pruebas unitarias** para verificar la lógica de negocio.
-- Ahora incluye un botón para que el usuario pueda guardar sus frases favoritas ❤️.
+Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación.  
+Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture** e implementa **inyección de dependencias con Dagger Hilt**.  
+También incorpora una **base de datos local con Room** para persistir las citas, una sección de **favoritos**, y **pruebas unitarias** para verificar la lógica de negocio.
+
 ---
+
 ## 👩‍🏫 ¿Qué hace esta app?
 
-- Al abrir la app, muestra una cita inspiradora aleatoria sobre programación.
-- Al hacer clic en cualquier parte de la pantalla, se muestra una nueva cita aleatoria.
-- Las citas provienen de una base de datos en línea (Firebase Realtime Database).
-- Una vez obtenidas, las citas se guardan localmente usando Room para acceder a ellas sin conexión.
-- Las citas aleatorias posteriores se cargan desde la base de datos local.
-- Los usuarios pueden marcar sus frases favoritas y la app las recordará.
+✅ Muestra una cita inspiradora aleatoria sobre programación.  
+✅ Al hacer clic en la pantalla, carga una nueva cita aleatoria.  
+✅ Las citas provienen de Firebase Realtime Database y se guardan localmente con Room.  
+✅ Funciona sin conexión usando la base local.  
+✅ Los usuarios pueden marcar frases como favoritas ❤️.  
+✅ Muestra todas las frases favoritas en una nueva pantalla.
+✅ Soporta funcionamiento offline con las citas locales.
 
 ![Demo de la App](assets/demo.gif)
 
@@ -24,7 +27,6 @@ Representa los datos y su origen.
 
 - `QuoteModel.kt`: Modelo de dominio (cita con texto,  autor, favorito).
 - `QuoteEntity.kt`: Entidad Room para persistencia local.
-- `QuoteProvider.kt`: Contenedor temporal de citas (ya no se usa directamente, pero puede ser útil).
 
 ### 🌐 Red (Network)
 Encargada de comunicarse con la API.
@@ -35,40 +37,47 @@ Encargada de comunicarse con la API.
 ### 🗄️ Base de datos local (Room)
 Permite guardar y recuperar citas localmente.
 
-- `QuoteDao.kt`:   
-  - Consultas para obtener, insertar y actualizar citas.
-  - Añadido soporte para actualizar el campo `isFavorite`.
-- `QuoteDatabase.kt`: Define la base de datos local Room.
+- `QuoteDao.kt`:
+  - Consultas para obtener, insertar, actualizar y filtrar por favoritos.
+  - Nuevo método `getFavoriteQuotes()` para obtener solo favoritas.
+- `QuoteDatabase.kt`: Configuración de Room.
 
 ### 📦 Repositorio (Repository)
 Intermediario entre los datos (API / Room) y la lógica de negocio (Use Cases).
 
-- `QuoteRepository.kt`:
-    - Si es necesario, obtiene las citas desde el servicio de red.
-    - Las guarda en la base de datos Room.
-    - Devuelve citas al ViewModel desde Room. 
-    - Agrega lógica para guardar y actualizar citas favoritas.
+-  `QuoteRepository.kt`:
+- Obtiene citas desde la API.
+- Guarda y actualiza citas en la base local.
+- Maneja el estado de favoritas.
+- Devuelve citas favoritas como `Flow<List<Quote>>`.
 
 ### 🎯 Casos de Uso (UseCase)
 Contienen la lógica del negocio de la app.
 
-- `GetQuotesUseCase.kt`: Obtiene todas las citas desde la API y las guarda localmente.
-- `GetRandomQuoteUseCase.kt`: Elige una cita aleatoria desde Room.
+- `GetQuotesUseCase.kt`: Obtiene citas de la API y las guarda localmente.
+- `GetRandomQuoteUseCase.kt`: Selecciona una cita aleatoria.
 - `SetFavoriteQuoteUseCase.kt`: Marca/desmarca citas como favoritas.
+- `GetFavoriteQuoteUseCase.kt`: Obtiene citas favoritas desde Room.
 
 ### 👁️ Vista (View)
 Se encarga de mostrar los datos al usuario y responder a sus interacciones.
 
-- `MainActivity.kt`: Muestra la interfaz de usuario, observa los cambios del ViewModel y responde al clic del usuario para mostrar una nueva cita.
-  - 🆕 **Ahora incluye un botón para marcar una cita como favorita**.
-  - 
+- `MainActivity.kt`:
+  - Contiene el host para `QuoteFragment`.
+- `QuoteFragment.kt`:
+  - Muestra la cita actual y permite marcar como favorita.
+- `FavoriteQuotesFragment.kt`:
+  - Nueva vista para mostrar todas las frases favoritas usando un RecyclerView.
+- `FavoriteQuotesAdapter.kt`: Adapter para listar las favoritas.
+- 
 ### 🧠 ViewModel
 Conecta la vista con los datos y la lógica de negocio.
 
-- `QuoteViewModel.kt`: 
-  - Se comunica con los casos de uso, mantiene el estado de la cita actual y la muestra a la vista usando `LiveData`.
-  - Maneja el estado actual de la cita y si es favorita.
-  - Expone funciones para cambiar de cita y marcar como favorita.
+- `QuoteViewModel.kt`:
+  - Mantiene el estado de la cita actual y si es favorita.
+  - Expone funciones para cambiar cita, marcar favorito y observar favoritos.
+- `FavoriteQuotesViewModel.kt`:
+  - Obtiene y expone el listado de favoritos como `LiveData`.
   
 ## 🧪 Pruebas Unitarias
 
@@ -90,13 +99,21 @@ Este proyecto incluye pruebas unitarias que validan el comportamiento de los cas
 - Desmarca una cita favorita correctamente.
 - Verifica que el estado guardado se respete.
 
+### ✅ `GetFavoriteQuoteUseCaseTest.kt`
+- Obtiene correctamente las citas favoritas como un `Flow<List<Quote>>`.
+- Verifica que solo las citas marcadas con `isFavorite = true` son emitidas.
+
 Las pruebas están escritas usando **MockK** y se ejecutan con **coroutines**.
 
 ---
 ## 🧩 Inyección de dependencias con Dagger Hilt
 
-La app utiliza **Dagger Hilt** para gestionar la inyección de dependencias de forma eficiente y desacoplada. Esto permite una mejor escalabilidad y testeo del código.
+La app usa **Dagger Hilt** para:
+- Inyectar Retrofit, Room y otros servicios.
+- Proveer dependencias al ViewModel.
+- Facilitar pruebas y reducir código repetitivo.
 
+Principales anotaciones:
 - `@HiltAndroidApp`: Aplicación base configurada para usar Hilt.
 - `@Inject`: Se usa para proveer dependencias en clases como `QuoteViewModel`, `QuoteRepository`, y `QuoteService`.
 - `@Module` y `@InstallIn`: Se definen módulos para proveer Retrofit, Room, el cliente de API y otras dependencias.
