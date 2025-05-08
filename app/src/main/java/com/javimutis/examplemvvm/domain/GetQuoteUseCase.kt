@@ -16,6 +16,8 @@ class GetQuotesUseCase @Inject constructor(private val repository: QuoteReposito
     suspend operator fun invoke(): List<Quote> {
         val quotes = repository.getAllQuotesFromApi()  // Pide las frases a la API.
         return if (quotes.isNotEmpty()) {             // Si llegaron frases nuevas:
+
+            repository.clearQuotes()
             repository.insertQuotes(quotes.map { it.toDatabase() }) // Guarda esas frases en la base.
             quotes                                                 // Devuelve las frases nuevas.
         } else {
