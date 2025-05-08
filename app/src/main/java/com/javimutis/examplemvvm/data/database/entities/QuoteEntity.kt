@@ -9,10 +9,10 @@ import com.javimutis.examplemvvm.domain.model.Quote
 @Entity(tableName = "quote_table")
 data class QuoteEntity(
     @PrimaryKey
-    @ColumnInfo(name = "quote") val quote: String, // El texto de la frase (clave primaria).
-    @ColumnInfo(name = "author") val author: String, // El nombre del autor.
-    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean // Indica si la frase está marcada como favorita.
+    @ColumnInfo(name = "quote") val quote: String,       // Texto de la frase (clave única).
+    @ColumnInfo(name = "author") val author: String,    // Nombre del autor.
+    @ColumnInfo(name = "isFavorite") val isFavorite: Boolean // Si es favorita o no.
 )
 
-// Convierte una frase del modelo de dominio (Quote) al modelo de base de datos (QuoteEntity).
+// Función para convertir una frase del modelo de dominio (Quote) a modelo de base de datos (QuoteEntity).
 fun Quote.toDatabase() = QuoteEntity(quote = quote, author = author, isFavorite = isFavorite)

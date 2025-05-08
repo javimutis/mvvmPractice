@@ -13,41 +13,40 @@ import org.junit.Test
 // Clase de test para SetFavoriteQuoteUseCase (caso de uso que marca/desmarca como favorito)
 class SetFavoriteQuoteUseCaseTest {
 
-    // Creamos un mock del repositorio (no es real, simula comportamiento)
     @RelaxedMockK
-    private lateinit var quoteRepository: QuoteRepository
+    private lateinit var quoteRepository: QuoteRepository  // Mock repositorio
 
-    // Instancia del caso de uso que queremos probar
-    private lateinit var setFavoriteQuoteUseCase: SetFavoriteQuoteUseCase
+    private lateinit var setFavoriteQuoteUseCase: SetFavoriteQuoteUseCase  // Caso de uso
 
     @Before
     fun onBefore() {
-        MockKAnnotations.init(this) // Inicializa los mocks antes de cada test
-        setFavoriteQuoteUseCase = SetFavoriteQuoteUseCase(quoteRepository) // Inyectamos el mock al caso de uso
+        // Inicializamos mocks
+        MockKAnnotations.init(this)
+        setFavoriteQuoteUseCase = SetFavoriteQuoteUseCase(quoteRepository)
     }
 
     @Test
     fun `when invoke is called then repository updates quote with favorite true`() = runBlocking {
-        // Given: Tenemos una quote (cita) no favorita
+        // Given: Cita no favorita
         val quote = Quote("cita", "autor", false)
 
-        // When: Ejecutamos el caso de uso para marcarla como favorita
+        // When: Marcamos como favorita
         setFavoriteQuoteUseCase(quote, true)
 
-        // Then: Verificamos que el repositorio recibió la quote actualizada correctamente (favorito = true)
-        val expectedQuote = quote.copy(isFavorite = true) // Creamos la versión esperada
-        coVerify(exactly = 1) { quoteRepository.updateQuoteFavoriteStatus(expectedQuote) } // Verificamos que se llamó una vez
+        // Then: Verificamos que el repositorio recibió la cita actualizada
+        val expectedQuote = quote.copy(isFavorite = true)
+        coVerify(exactly = 1) { quoteRepository.updateQuoteFavoriteStatus(expectedQuote) }
     }
 
     @Test
     fun `when invoke is called then repository updates quote with favorite false`() = runBlocking {
-        // Given: Tenemos una quote ya marcada como favorita
+        // Given: Cita favorita
         val quote = Quote("Cita original", "Autor", isFavorite = true)
 
-        // When: Ejecutamos el caso de uso para desmarcarla
+        // When: Desmarcamos como favorita
         setFavoriteQuoteUseCase(quote, false)
 
-        // Then: Verificamos que el repositorio recibió la quote actualizada correctamente (favorito = false)
+        // Then: Verificamos que el repositorio recibió la cita actualizada
         val expectedQuote = quote.copy(isFavorite = false)
         coVerify(exactly = 1) { quoteRepository.updateQuoteFavoriteStatus(expectedQuote) }
     }

@@ -5,22 +5,22 @@ import com.javimutis.examplemvvm.data.database.entities.toDatabase
 import com.javimutis.examplemvvm.domain.model.Quote
 import javax.inject.Inject
 
-// Este UseCase maneja la lógica para obtener las frases (quotes).
-// Intenta traer las frases desde la API. Si encuentra frases:
-// - Limpia la base de datos local.
-// - Inserta las nuevas frases en la base de datos.
-// Si no hay frases en la API, carga las frases desde la base local.
-
+// Caso de uso para obtener todas las frases, primero desde la API.
+// Si la API responde con frases:
+//    - Borra las frases locales.
+//    - Inserta las nuevas.
+// Si la API no responde, usa las frases locales.
 class GetQuotesUseCase @Inject constructor(private val repository: QuoteRepository) {
 
-    // Operador invoke permite usar la clase como si fuera una función
+    // suspend operator fun invoke() permite llamar esta clase como si fuera una función suspendida.
     suspend operator fun invoke(): List<Quote> {
-        val quotes = repository.getAllQuotesFromApi() // Pide las frases desde la API
-        return if (quotes.isNotEmpty()) {
-            repository.insertQuotes(quotes.map { it.toDatabase() }) // Guarda las nuevas frases desde la API
-            quotes // Devuelve las frases traídas desde la API
+        val quotes = repository.getAllQuotesFromApi()  // Pide las frases a la API.
+        return if (quotes.isNotEmpty()) {             // Si llegaron frases nuevas:
+            repository.insertQuotes(quotes.map { it.toDatabase() }) // Guarda esas frases en la base.
+            quotes                                                 // Devuelve las frases nuevas.
         } else {
-            repository.getAllQuotesFromDatabase() // Si no hay frases nuevas, devuelve las de la base local
+            repository.getAllQuotesFromDatabase() // Si no hay nuevas, carga las guardadas localmente.
         }
     }
 }
+

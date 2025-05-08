@@ -32,12 +32,14 @@ class QuoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        quoteViewModel.onCreate()
+        quoteViewModel.onCreate()  // Pedimos que cargue frases
 
+        // Observamos los cambios en la frase actual
         quoteViewModel.quoteModel.observe(viewLifecycleOwner, Observer { currentQuote ->
             binding.tvQuote.text = currentQuote.quote
             binding.tvAuthor.text = currentQuote.author
 
+            // Mostramos el ícono correcto según si es favorito o no
             if (currentQuote.isFavorite) {
                 binding.favoriteButton.setImageResource(R.drawable.ic_favorite)
             } else {
@@ -45,14 +47,17 @@ class QuoteFragment : Fragment() {
             }
         })
 
+        // Observamos si está cargando para mostrar/ocultar el progreso
         quoteViewModel.isLoading.observe(viewLifecycleOwner, Observer {
             binding.progress.isVisible = it
         })
 
+        // Cuando tocamos el fondo, pedimos una frase random
         binding.viewContainer.setOnClickListener {
             quoteViewModel.randomQuote()
         }
 
+        // Cuando tocamos el botón de favorito, cambiamos su estado
         binding.favoriteButton.setOnClickListener {
             quoteViewModel.toggleFavorite()
         }
@@ -60,6 +65,6 @@ class QuoteFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        _binding = null  // Evitamos fugas de memoria
     }
 }

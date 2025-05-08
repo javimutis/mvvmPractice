@@ -13,47 +13,46 @@ import org.junit.Test
 
 class GetQuotesUseCaseTest {
 
-    // Crea un mock relajado (no lanza error si no se usa un método del mock)
     @RelaxedMockK
-    private lateinit var quoteRepository: QuoteRepository
+    private lateinit var quoteRepository: QuoteRepository  // Simulamos el repositorio
 
-    // Instancia del use case a testear
-    lateinit var getQuotesUseCase: GetQuotesUseCase
+    lateinit var getQuotesUseCase: GetQuotesUseCase  // Caso de uso a testear
 
     @Before
     fun onBefore() {
-        // Inicializa los mocks antes de cada test
+        // Inicializamos los mocks antes de cada prueba
         MockKAnnotations.init(this)
         getQuotesUseCase = GetQuotesUseCase(quoteRepository)
     }
 
     @Test
     fun `when the api doesnt return anything then get values from database`() = runBlocking {
-        // Given - Simula que la API devuelve una lista vacía
+        // Given: La API devuelve lista vacía
         coEvery { quoteRepository.getAllQuotesFromApi() } returns emptyList()
 
-        // When - Ejecuta el use case
+        // When: Ejecutamos el use case
         getQuotesUseCase()
 
-        // Then - Verifica que:
-        coVerify(exactly = 0){ quoteRepository.clearQuotes() } // No se limpió la base
-        coVerify(exactly = 0){ quoteRepository.insertQuotes(any()) } // No se insertó nada
-        coVerify(exactly = 1) {  quoteRepository.getAllQuotesFromDatabase() } // Se usó la base local
+        // Then: Comprobamos el comportamiento esperado
+        coVerify(exactly = 0){ quoteRepository.clearQuotes() }  // No limpia base local
+        coVerify(exactly = 0){ quoteRepository.insertQuotes(any()) }  // No inserta nada
+        coVerify(exactly = 1){ quoteRepository.getAllQuotesFromDatabase() }  // Usa base local
     }
 
     @Test
     fun `when the api return something then get values from api`() = runBlocking {
-        // Given - Simula que la API devuelve una frase
+        // Given: La API devuelve una lista con una cita
         val myList = listOf(Quote("cita","autor"))
         coEvery { quoteRepository.getAllQuotesFromApi() } returns myList
 
-        // When - Ejecuta el use case
+        // When: Ejecutamos el use case
         val response = getQuotesUseCase()
 
-        // Then - Verifica que:
-        coVerify(exactly = 1){ quoteRepository.clearQuotes() } // Se limpió la base local
-        coVerify(exactly = 1){ quoteRepository.insertQuotes(any()) } // Se insertaron nuevas frases
-        coVerify(exactly = 0){ quoteRepository.getAllQuotesFromDatabase() } // No se usó la base local
-        assert(myList == response) // El resultado fue lo mismo que devolvió la API
+        // Then: Comprobamos que:
+        coVerify(exactly = 1){ quoteRepository.clearQuotes() }  // Limpia base local
+        coVerify(exactly = 1){ quoteRepository.insertQuotes(any()) }  // Inserta nuevas frases
+        coVerify(exactly = 0){ quoteRepository.getAllQuotesFromDatabase() }  // No usa base local
+        assert(myList == response)  // El resultado es lo que devuelve la API
     }
 }
+
