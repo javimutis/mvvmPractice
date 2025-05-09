@@ -1,22 +1,29 @@
+# Nombre del workflow (lo verás en GitHub Actions)
 name: Android testing CI
-on: [push]
+
+# Define cuándo se ejecuta este workflow
+on: [push]  # Se ejecuta en TODO push a cualquier rama
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  test:  # Nombre del job
+    runs-on: ubuntu-latest  # Corre en máquina Ubuntu (última versión)
     steps:
+      # Paso 1: Descarga el código del repo en la máquina virtual
       - uses: actions/checkout@v3
+
+      # Paso 2: Configura Java JDK 17 (necesario para correr los tests en este proyecto)
       - name: set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '17'  # Usa JDK 17
           distribution: 'temurin'
-          cache: gradle
+          cache: gradle  # Usa caché de Gradle
 
+      # Paso 3: Ejecuta los tests unitarios en el flavor/debug
       - name: Unit Test
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest  # Corre todos los unit tests del módulo debug
 
+      # Paso 4: Genera y publica un reporte visual de los tests en GitHub
       - name: Android Test Report
-        uses: asadmansr/android-test-report-action@v1.2.0
-        if: ${{ always() }}
-
+        uses: asadmansr/android-test-report-action@v1.2.0  # Usa acción externa para reportes
+        if: ${{ always() }}  # Ejecuta esto aunque los tests hayan fallado
