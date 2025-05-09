@@ -2,9 +2,10 @@
 
 Este proyecto es una aplicación sencilla que muestra citas relacionadas con la programación.  
 Está desarrollada en **Kotlin** utilizando el patrón de arquitectura **MVVM** (Model - View - ViewModel), principios de **Clean Architecture** e implementa **inyección de dependencias con Dagger Hilt**.  
-También incorpora una **base de datos local con Room** para persistir las citas, una sección de **favoritos**, y **pruebas unitarias** para verificar la lógica de negocio.
+También incorpora una **base de datos local con Room**, una sección de **favoritos**, y **pruebas unitarias** para verificar la lógica de negocio.
 
----
+Además, integra un flujo **CI/CD (Integración y Entrega Continua)** con **GitHub Actions**, incluyendo pruebas automáticas en cada push o pull request.
+
 
 ## 👩‍🏫 ¿Qué hace esta app?
 
@@ -13,8 +14,8 @@ También incorpora una **base de datos local con Room** para persistir las citas
 ✅ Las citas provienen de Firebase Realtime Database y se guardan localmente con Room.  
 ✅ Funciona sin conexión usando la base local.  
 ✅ Los usuarios pueden marcar frases como favoritas ❤️.  
-✅ Muestra todas las frases favoritas en una nueva pantalla.
-✅ Soporta funcionamiento offline con las citas locales.
+✅ Muestra todas las frases favoritas en una nueva pantalla.  
+✅ Corre pruebas unitarias automáticamente usando CI/CD con GitHub Actions.
 
 ![Demo de la App](assets/demo.gif)
 
@@ -106,6 +107,18 @@ Este proyecto incluye pruebas unitarias que validan el comportamiento de los cas
 Las pruebas están escritas usando **MockK** y se ejecutan con **coroutines**.
 
 ---
+
+## ⚙️ CI/CD y Testing Automático
+
+El proyecto incluye un pipeline de **GitHub Actions** que:
+
+- Se ejecuta automáticamente al hacer **push** o abrir un **pull request** en las ramas `ci/cd` y `master`.
+- Construye el proyecto con Gradle.
+- Corre las pruebas unitarias (`./gradlew test`).
+
+Esto asegura que el proyecto se mantenga **estable**, que el código enviado pase las pruebas, y que cualquier fallo sea detectado temprano.
+
+---
 ## 🧩 Inyección de dependencias con Dagger Hilt
 
 La app usa **Dagger Hilt** para:
@@ -140,6 +153,7 @@ Ejemplo de URL de la base de datos:
 - **Retrofit** para conectarse a la API
 - **Firebase Realtime Database** como fuente de datos
 - **MockK** para test unitarios
+- **GitHub Actions (CI/CD)** 
 
 ## 📖 ¿Para qué sirve este proyecto?
 
@@ -153,6 +167,7 @@ Este proyecto es un excelente punto de partida para:
 - Familiarizarse con `ViewBinding`, `LiveData`, `ViewModel` y más.
 - Practicar pruebas unitarias con casos de uso reales.
 - Ampliar funcionalidades.
+- Configurar CI/CD con GitHub Actions.
 
 ## 🛠️ ¿Cómo correr este proyecto?
 
