@@ -6,6 +6,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.impl.annotations.RelaxedMockK
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Test
@@ -41,18 +42,15 @@ class GetQuotesUseCaseTest {
 
     @Test
     fun `when the api return something then get values from api`() = runBlocking {
-        // Given: La API devuelve una lista con una cita
         val myList = listOf(Quote("cita","autor"))
         coEvery { quoteRepository.getAllQuotesFromApi() } returns myList
 
-        // When: Ejecutamos el use case
         val response = getQuotesUseCase()
 
-        // Then: Comprobamos que:
-        coVerify(exactly = 1){ quoteRepository.clearQuotes() }  // Limpia base local
-        coVerify(exactly = 1){ quoteRepository.insertQuotes(any()) }  // Inserta nuevas frases
-        coVerify(exactly = 0){ quoteRepository.getAllQuotesFromDatabase() }  // No usa base local
-        assert(myList == response)  // El resultado es lo que devuelve la API
+        coVerify(exactly = 1){ quoteRepository.clearQuotes() }
+        coVerify(exactly = 1){ quoteRepository.insertQuotes(any()) }
+        coVerify(exactly = 0){ quoteRepository.getAllQuotesFromDatabase() }
+        assertEquals(myList, response)
     }
 }
 

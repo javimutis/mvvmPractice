@@ -3,6 +3,7 @@ name: Android CI
 
 # Define cuándo se ejecuta este workflow:
 on:
+
   push:  # Cuando alguien hace un push (sube cambios)
     branches: [ "ci/cd", "master" ]  # Solo si es a las ramas "ci/cd" o "master"
   pull_request:  # Cuando se crea o actualiza un pull request
